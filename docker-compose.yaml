@@ -1,0 +1,33 @@
+version: '3.5'
+
+services: 
+    api01: &api
+        hostname: api01
+        build:
+            context: .
+            dockerfile: ./src/TechChallenge01.Api/Dockerfile        
+        restart: always
+        environment:
+            ASPNETCORE_ENVIRONMENT: Docker
+        depends_on:
+        - db
+        ports:
+        - "8081:80"
+
+    db:
+        image: postgres
+        container_name: postgress
+        restart: always
+        environment:
+            POSTGRES_DB: tech_challenge
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+        ports:
+        - "5433:5432"
+        volumes:
+        - ./Configs/script.sql:/docker-entrypoint-initdb.d/script.sql
+
+networks:
+    default:
+        driver: bridge
+        name: tech_challenge
