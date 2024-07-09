@@ -8,4 +8,5 @@ public interface IContactRepository : IRepository<Contact>
     void Save(Contact product);
     void Update(Contact product);
     void Delete(Contact contact);
+    Task<List<Contact>> GetAll();
 }

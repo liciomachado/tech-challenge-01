@@ -34,4 +34,9 @@ public class ContactRepository(DataContext dataContext) : IContactRepository
     {
         dataContext.Contacts.Remove(contact);
     }
+
+    public async Task<List<Contact>> GetAll()
+    {
+        return await dataContext.Contacts.ToListAsync();
+    }
 }

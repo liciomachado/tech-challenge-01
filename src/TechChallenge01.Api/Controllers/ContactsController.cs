@@ -13,5 +13,11 @@ namespace TechChallenge01.Api.Controllers
         {
             return Ok(await insertContactUseCase.Execute(insertContactRequest));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase)
+        {
+            return Ok(await getContactsUseCase.Execute());
+        }
     }
 }
