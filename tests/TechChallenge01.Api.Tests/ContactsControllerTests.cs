@@ -23,7 +23,7 @@ public class ContactsControllerTests : BaseFunctionalTests
 
     [Fact(DisplayName = "Deve inserir um contato com sucesso")]
     [Trait("Functional", "ContactsController")]
-    public async Task Should_Return_NotFound_WhenIdNotFound()
+    public async Task Should_Return_ContactCreatedWithSuccess()
     {
         //Arrange
         InsertContactRequest insertContactRequest = new("joao", "011-99999-9999", "email@valido.com");
@@ -40,5 +40,24 @@ public class ContactsControllerTests : BaseFunctionalTests
         contactResponse.Nome.Should().BeEquivalentTo(insertContactRequest.Nome);
         contactResponse.PhoneNumber.Should().BeEquivalentTo(insertContactRequest.PhoneNumber);
         contactResponse.Email.Should().BeEquivalentTo(insertContactRequest.Email);
+    }
+
+    [Fact(DisplayName = "Deve retornar uma lista com todos os contatos")]
+    [Trait("Functional", "ContactsController")]
+    public async Task Should_Return_ListWithAllContacts()
+    {
+        //Arrange 
+        await Should_Return_ContactCreatedWithSuccess();
+
+        //Act
+        var response = await HttpClient.GetAsync($"api/contacts");
+
+        //Assert
+        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var content = await response.Content.ReadAsStringAsync();
+        var contactResponse = JsonSerializer.Deserialize<List<InsertContactResponse>>(content, jsonOptions)!;
+        contactResponse.Should().NotBeNull();
+        contactResponse.Should().HaveCountGreaterThan(0);
     }
 }
