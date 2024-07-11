@@ -1,3 +1,7 @@
-﻿namespace TechChallenge01.Application.ViewModels;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record InsertContactRequest(string Nome, string PhoneNumber, string Email);
+namespace TechChallenge01.Application.ViewModels;
+
+public record InsertContactRequest([Required] string Nome,
+    [Required][MinLength(11)][MaxLength(20)] string PhoneNumber,
+    [EmailAddress] string Email);

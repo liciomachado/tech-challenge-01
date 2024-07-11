@@ -4,5 +4,5 @@ namespace TechChallenge01.Application.Interfaces;
 
 public interface IGetContactsUseCase
 {
-    Task<List<InsertContactResponse>> Execute();
+    Task<List<ContactResponse>> Execute(int? ddd);
 }

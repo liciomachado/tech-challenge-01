@@ -12,6 +12,14 @@ public class DataContext : DbContext, IUnitOfWork
     {
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Contact>().OwnsOne(p => p.DDD, nomeBuilder =>
+        {
+            nomeBuilder.Property(n => n.Value).HasColumnName("ddd");
+        });
+    }
+
     public async Task<bool> Commit()
     {
         return await base.SaveChangesAsync() > 0;

@@ -35,7 +35,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         response.EnsureSuccessStatusCode();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var content = await response.Content.ReadAsStringAsync();
-        InsertContactResponse contactResponse = JsonSerializer.Deserialize<InsertContactResponse>(content, jsonOptions)!;
+        ContactResponse contactResponse = JsonSerializer.Deserialize<ContactResponse>(content, jsonOptions)!;
         contactResponse.Should().NotBeNull();
         contactResponse.Nome.Should().BeEquivalentTo(insertContactRequest.Nome);
         contactResponse.PhoneNumber.Should().BeEquivalentTo(insertContactRequest.PhoneNumber);
@@ -56,8 +56,27 @@ public class ContactsControllerTests : BaseFunctionalTests
         response.EnsureSuccessStatusCode();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var content = await response.Content.ReadAsStringAsync();
-        var contactResponse = JsonSerializer.Deserialize<List<InsertContactResponse>>(content, jsonOptions)!;
+        var contactResponse = JsonSerializer.Deserialize<List<ContactResponse>>(content, jsonOptions)!;
         contactResponse.Should().NotBeNull();
         contactResponse.Should().HaveCountGreaterThan(0);
+    }
+
+    [Fact(DisplayName = "Deve retornar uma lista com filtro de ddd")]
+    [Trait("Functional", "ContactsController")]
+    public async Task Should_Return_ListWithContactsFiltered()
+    {
+        //Arrange 
+        await Should_Return_ContactCreatedWithSuccess();
+
+        //Act
+        var response = await HttpClient.GetAsync($"api/contacts?ddd=15");
+
+        //Assert
+        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var content = await response.Content.ReadAsStringAsync();
+        var contactResponse = JsonSerializer.Deserialize<List<ContactResponse>>(content, jsonOptions)!;
+        contactResponse.Should().NotBeNull();
+        contactResponse.Should().HaveCount(0);
     }
 }

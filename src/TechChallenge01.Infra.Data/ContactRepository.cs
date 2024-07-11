@@ -39,4 +39,9 @@ public class ContactRepository(DataContext dataContext) : IContactRepository
     {
         return await dataContext.Contacts.ToListAsync();
     }
+
+    public async Task<List<Contact>> GetByDDD(int value)
+    {
+        return await dataContext.Contacts.Where(x => x.DDD.Value == value).ToListAsync();
+    }
 }

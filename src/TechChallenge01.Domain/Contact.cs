@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TechChallenge01.Domain.Core;
+using TechChallenge01.Domain.ValueObjects;
 
 namespace TechChallenge01.Domain;
 
 [Table("contacts", Schema = "public")]
-public class Contact : IAggregateRoot
+public class Contact
 {
     [Key]
     [Column("id")]
@@ -17,10 +17,16 @@ public class Contact : IAggregateRoot
     [Column("email")]
     public string Email { get; set; }
 
+    public RegionDDD DDD { get; set; }
+
+    public Contact() { }
+
     public Contact(string name, string phoneNumber, string email)
     {
-        Name = name;
+        var value = int.Parse(phoneNumber.Substring(0, 2));
+        DDD = new RegionDDD(value);
         PhoneNumber = phoneNumber;
+        Name = name;
         Email = email;
     }
 }

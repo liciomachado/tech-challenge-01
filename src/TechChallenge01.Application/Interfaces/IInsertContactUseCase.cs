@@ -4,5 +4,5 @@ namespace TechChallenge01.Application.Interfaces;
 
 public interface IInsertContactUseCase
 {
-    Task<InsertContactResponse> Execute(InsertContactRequest insertContactRequest);
+    Task<ContactResponse> Execute(InsertContactRequest insertContactRequest);
 }
