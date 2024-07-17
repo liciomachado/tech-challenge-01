@@ -9,11 +9,13 @@ namespace TechChallenge01.Api.Controllers
     public class ContactsController : ControllerBase
     {
         /// <summary>
-        /// Inserir um Contato
+        /// Inclusão de um Contato
         /// </summary>
-        /// <param name="insertContactUseCase"></param>
-        /// <param name="insertContactRequest"></param>
-        /// <returns></returns>
+        /// <param name="insertContactUseCase">Contato a ser incluído</param>
+        /// <param name="insertContactRequest">Contato a ser incluído</param>
+        /// <returns>Retorna o Contato Incluído</returns>
+        /// <response code="200">Sucesso na inclusão do Contato</response>
+        /// <response code="500">Não foi possível incluir o Contato</response>
         [HttpPost]
         public async Task<IActionResult> Add([FromServices] IInsertContactUseCase insertContactUseCase, InsertContactRequest insertContactRequest)
         {
@@ -29,11 +31,13 @@ namespace TechChallenge01.Api.Controllers
         }
 
         /// <summary>
-        /// Buscar Contatos
+        /// Retorna os Contatos Incluídos
         /// </summary>
         /// <param name="getContactsUseCase"></param>
-        /// <param name="ddd"></param>
-        /// <returns></returns>
+        /// <param name="ddd">Informe a Região para Consulta (DDD)</param>
+        /// <returns>Retorna a </returns>
+        /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
+        /// <response code="500">Não foi possível retornar os Contatos</response>
         [HttpGet]
         public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] int? ddd)
         {
