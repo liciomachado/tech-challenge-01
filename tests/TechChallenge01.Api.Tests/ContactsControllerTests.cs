@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using TechChallenge01.Api.Tests.Abstractions;
 using TechChallenge01.Application.ViewModels;
 
@@ -26,7 +27,7 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ContactCreatedWithSuccess()
     {
         //Arrange
-        InsertContactRequest insertContactRequest = new("joao", "011-99999-9999", "email@valido.com");
+        InsertContactRequest insertContactRequest = new("joao", "(11) 99999-9999", "email@valido.com");
 
         //Act
         var response = await HttpClient.PostAsJsonAsync($"api/contacts", insertContactRequest);
@@ -38,7 +39,8 @@ public class ContactsControllerTests : BaseFunctionalTests
         ContactResponse contactResponse = JsonSerializer.Deserialize<ContactResponse>(content, jsonOptions)!;
         contactResponse.Should().NotBeNull();
         contactResponse.Nome.Should().BeEquivalentTo(insertContactRequest.Nome);
-        contactResponse.PhoneNumber.Should().BeEquivalentTo(insertContactRequest.PhoneNumber);
+        var formatedPhone = Regex.Replace(insertContactRequest.PhoneNumber, "[^0-9a-zA-Z]+", "");
+        contactResponse.PhoneNumber.Should().BeEquivalentTo(formatedPhone);
         contactResponse.Email.Should().BeEquivalentTo(insertContactRequest.Email);
     }
 
