@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using TechChallenge01.Domain.ValueObjects;
 
-namespace TechChallenge01.Domain;
+namespace TechChallenge01.Domain.Entities;
 
 [Table("contacts", Schema = "public")]
 public class Contact
@@ -12,19 +12,20 @@ public class Contact
     public long Id { get; set; }
     [Column("name")]
     public string Name { get; set; }
-    [Column("phone_number")]
-    public string PhoneNumber { get; set; }
+    public PhoneNumber PhoneNumber { get; set; }
     [Column("email")]
     public string Email { get; set; }
-
-    public RegionDDD DDD { get; set; }
-
     public Contact() { }
 
-    public Contact(string name, string phoneNumber, string email)
+    public Contact(string name, PhoneNumber phoneNumber, string email)
     {
-        var value = int.Parse(phoneNumber.Substring(0, 2));
-        DDD = new RegionDDD(value);
+        PhoneNumber = phoneNumber;
+        Name = name;
+        Email = email;
+    }
+
+    public void Update(string name, PhoneNumber phoneNumber, string email)
+    {
         PhoneNumber = phoneNumber;
         Name = name;
         Email = email;

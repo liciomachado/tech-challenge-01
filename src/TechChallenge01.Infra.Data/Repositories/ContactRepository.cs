@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge01.Domain;
 using TechChallenge01.Domain.Core;
+using TechChallenge01.Domain.Entities;
 using TechChallenge01.Domain.Interfaces;
+using TechChallenge01.Infra.Data.Context;
 
-namespace TechChallenge01.Infra.Data;
+namespace TechChallenge01.Infra.Data.Repositories;
 
 public class ContactRepository(DataContext dataContext) : IContactRepository
 {
@@ -40,8 +41,8 @@ public class ContactRepository(DataContext dataContext) : IContactRepository
         return await dataContext.Contacts.ToListAsync();
     }
 
-    public async Task<List<Contact>> GetByDDD(int value)
+    public async Task<List<Contact>> GetByDDD(string? value)
     {
-        return await dataContext.Contacts.Where(x => x.DDD.Value == value).ToListAsync();
+        return await dataContext.Contacts.Where(x => x.PhoneNumber.DDD == value).ToListAsync();
     }
 }

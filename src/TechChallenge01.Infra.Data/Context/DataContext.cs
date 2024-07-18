@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge01.Domain;
 using TechChallenge01.Domain.Core;
+using TechChallenge01.Domain.Entities;
 
-namespace TechChallenge01.Infra.Data;
+namespace TechChallenge01.Infra.Data.Context;
 
 public class DataContext : DbContext, IUnitOfWork
 {
@@ -14,9 +14,10 @@ public class DataContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Contact>().OwnsOne(p => p.DDD, nomeBuilder =>
+        modelBuilder.Entity<Contact>().OwnsOne(p => p.PhoneNumber, nomeBuilder =>
         {
-            nomeBuilder.Property(n => n.Value).HasColumnName("ddd");
+            nomeBuilder.Property(n => n.DDD).HasColumnName("ddd");
+            nomeBuilder.Property(n => n.Value).HasColumnName("phone_number");
         });
     }
 

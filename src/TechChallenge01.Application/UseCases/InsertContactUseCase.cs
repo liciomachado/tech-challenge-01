@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
-using TechChallenge01.Domain;
+using TechChallenge01.Domain.Entities;
 using TechChallenge01.Domain.Interfaces;
+using TechChallenge01.Domain.ValueObjects;
 
 namespace TechChallenge01.Application.UseCases;
 
@@ -10,15 +11,13 @@ public class InsertContactUseCase(IContactRepository contactRepository) : IInser
 {
     public async Task<ContactResponse> Execute(InsertContactRequest insertContactRequest)
     {
-        var formatedPhone = Regex.Replace(insertContactRequest.PhoneNumber, "[^0-9a-zA-Z]+", "");
-        if (formatedPhone.Length > 11)
-            throw new ApplicationException("Numero de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999");
+        var phoneNumber = new PhoneNumber(insertContactRequest.PhoneNumber);
 
-        var contact = new Contact(insertContactRequest.Nome, formatedPhone, insertContactRequest.Email);
+        var contact = new Contact(insertContactRequest.Nome, phoneNumber, insertContactRequest.Email);
         contactRepository.Save(contact);
         await contactRepository.UnitOfWork.Commit();
 
-        return new ContactResponse(contact.Id, contact.Name, contact.PhoneNumber, contact.Email, contact.DDD.Value);
+        return new ContactResponse(contact.Id, contact.Name, contact.PhoneNumber.Value, contact.Email, contact.PhoneNumber.DDD);
     }
 }
 
