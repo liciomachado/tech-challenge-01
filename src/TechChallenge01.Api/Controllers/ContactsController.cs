@@ -30,6 +30,20 @@ namespace TechChallenge01.Api.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update([FromServices] IUpdateContactUseCase updateContactUseCase, UpdateContactRequest updateContactRequest)
+        {
+            try
+            {
+                return Ok(await updateContactUseCase.Execute(updateContactRequest));
+
+            }
+            catch (ApplicationException e)
+            {
+                return BadRequest(new { e.Message });
+            }
+        }
+
         /// <summary>
         /// Retorna os Contatos Incluídos
         /// </summary>
@@ -39,7 +53,7 @@ namespace TechChallenge01.Api.Controllers
         /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
         /// <response code="500">Não foi possível retornar os Contatos</response>
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] int? ddd)
+        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery]string? ddd)
         {
             return Ok(await getContactsUseCase.Execute(ddd));
         }
