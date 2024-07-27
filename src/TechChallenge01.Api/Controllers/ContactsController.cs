@@ -13,7 +13,7 @@ namespace TechChallenge01.Api.Controllers
         /// </summary>
         /// <param name="insertContactUseCase">Contato a ser incluído</param>
         /// <param name="insertContactRequest">Contato a ser incluído</param>
-        /// <returns>Retorna o Contato Incluído</returns>
+        /// <returns>Retorna o Contato incluído</returns>
         /// <response code="200">Sucesso na inclusão do Contato</response>
         /// <response code="500">Não foi possível incluir o Contato</response>
         [HttpPost]
@@ -30,6 +30,14 @@ namespace TechChallenge01.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Alteração de um Contato
+        /// </summary>
+        /// <param name="updateContactUseCase">Contato a ser alterado</param>
+        /// <param name="updateContactRequest">Contato a ser alterado</param>
+        /// <returns>Retorna o Contato alterado</returns>
+        /// <response code="200">Sucesso na alteração do Contato</response>
+        /// <response code="500">Não foi possível alterar o Contato</response>
         [HttpPut]
         public async Task<IActionResult> Update([FromServices] IUpdateContactUseCase updateContactUseCase, UpdateContactRequest updateContactRequest)
         {
@@ -45,7 +53,7 @@ namespace TechChallenge01.Api.Controllers
         }
 
         /// <summary>
-        /// Retorna os Contatos Incluídos
+        /// Retorna os Contatos incluídos
         /// </summary>
         /// <param name="getContactsUseCase"></param>
         /// <param name="ddd">Informe a Região para Consulta (DDD)</param>
