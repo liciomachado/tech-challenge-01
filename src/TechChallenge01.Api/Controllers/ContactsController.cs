@@ -24,7 +24,7 @@ namespace TechChallenge01.Api.Controllers
                 return Ok(await insertContactUseCase.Execute(insertContactRequest));
 
             }
-            catch (ApplicationException e)
+            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
                 return BadRequest(new { e.Message });
             }
@@ -38,7 +38,7 @@ namespace TechChallenge01.Api.Controllers
                 return Ok(await updateContactUseCase.Execute(updateContactRequest));
 
             }
-            catch (ApplicationException e)
+            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
                 return BadRequest(new { e.Message });
             }
