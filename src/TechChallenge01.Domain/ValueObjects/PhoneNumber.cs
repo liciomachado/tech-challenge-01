@@ -12,9 +12,9 @@ namespace TechChallenge01.Domain.ValueObjects
         /// <exception cref="ArgumentException"></exception>
         public PhoneNumber(string value)
         {
-            var formattedValue = Regex.Replace(value, "[^0-9a-zA-Z]+", "");
-            if (formattedValue.Length > 11)
-                throw new ArgumentException("Numero de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999");
+            var formattedValue = Regex.Replace(value, "[^0-9]+", "");
+            if (!formattedValue.Length.Equals(11))
+                throw new ArgumentException("Número de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.");
             else
                 this.Value = formattedValue;
 
@@ -23,8 +23,10 @@ namespace TechChallenge01.Domain.ValueObjects
             {
                 throw new ArgumentException("DDD inválido.");
             }
-            else 
+            else
+            {
                 DDD = ddd.ToString();
+            }
         }
 
         public string Value { get; private set; }
@@ -38,7 +40,7 @@ namespace TechChallenge01.Domain.ValueObjects
         /// <summary>
         ///  HashSet é usado para armazenar os DDDs válidos, pois oferece busca rápida.
         /// </summary>
-        private static readonly HashSet<int> ValidDDDs = new HashSet<int>
+        public static readonly HashSet<int> ValidDDDs = new HashSet<int>
         {
             11, 12, 13, 14, 15, 16, 17, 18, 19, // São Paulo
             21, 22, 24, // Rio de Janeiro
