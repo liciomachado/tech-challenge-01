@@ -27,5 +27,21 @@ namespace TechChallenge01.Api.Controllers
         {
             return Ok(await getContactsUseCase.Execute(ddd));
         }
+
+        [HttpDelete]
+        [Route("delete")]
+        public async Task<IActionResult> Delete([FromServices] IDeleteContactsUseCase deleteContactsUseCase, [FromQuery] long Id)
+        {
+            try
+            {
+                await deleteContactsUseCase.Delete(Id);
+                return Ok();
+
+            }
+            catch (ApplicationException e)
+            {
+                return BadRequest(new { e.Message });
+            }
+        }
     }
 }

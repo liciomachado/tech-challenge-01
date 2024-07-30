@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Xml;
 using TechChallenge01.Domain;
 using TechChallenge01.Domain.Core;
 
@@ -18,6 +19,8 @@ public class DataContext : DbContext, IUnitOfWork
         {
             nomeBuilder.Property(n => n.Value).HasColumnName("ddd");
         });
+
+
     }
 
     public async Task<bool> Commit()
