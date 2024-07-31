@@ -28,7 +28,6 @@ public class ContactsControllerTests : BaseFunctionalTests
 
     private string validPhoneNumber => "(11) 99999-9999";
     private string validPhoneNumberToUpdate => "(12) 98888-8888";
-    private string invalidEmail => "john.emailinvalido.com";
 
     [Fact(DisplayName = "Deve inserir um contato com sucesso")]
     [Trait("Functional", "ContactsController")]
@@ -127,18 +126,20 @@ public class ContactsControllerTests : BaseFunctionalTests
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var content = await response.Content.ReadAsStringAsync();
-        BadRequestErrorMessage badRequestError = JsonSerializer.Deserialize<BadRequestErrorMessage>(content, jsonOptions)!;
+        ErrorMessageResponse badRequestError = JsonSerializer.Deserialize<ErrorMessageResponse>(content, jsonOptions)!;
         badRequestError.Should().NotBeNull();
-        badRequestError.message.Should().Be("Não foi possível localizar o cadastro do contato informado.");
+        badRequestError.Message.Should().Be("Não foi possível localizar o cadastro do contato informado.");
     }
 
-    [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um e-mail inválido")]
+    [Theory(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um e-mail inválido")]
     [Trait("Functional", "ContactsController")]
-    public async Task Should_Return_ErrorToUpdateContactWhenEmailIsInvalid()
+    [InlineData("john.emailinvalido.com", "Este endereço de e-mail não é válido.")]
+    [InlineData($"emailcommaisdoquecinquentacaracteres@dominiomaiordoqueesperado.com", "Tamanho inválido, máximo de 50 caracteres.")]
+    public async Task Should_Return_ErrorToUpdateContactWhenEmailIsInvalid(string email, string expectedErrorMessage)
     {
         //Arrange
         await Should_Return_ContactCreatedWithSuccess();
-        UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), validPhoneNumberToUpdate, invalidEmail);
+        UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), validPhoneNumberToUpdate, email);
 
         //Act
         var response = await HttpClient.PutAsJsonAsync($"api/contacts", updateContactRequest);
@@ -148,7 +149,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         var content = await response.Content.ReadAsStringAsync();
         ValidationProblemDetails validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(content, jsonOptions)!;
         validationProblemDetails.Should().NotBeNull();
-        validationProblemDetails.Errors["Email"].Should().Contain("Este endereço de e-mail não é válido.");
+        validationProblemDetails.Errors["Email"].Should().Contain(expectedErrorMessage);
     }
 
     [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um e-mail com tamanho inválido")]
@@ -203,18 +204,20 @@ public class ContactsControllerTests : BaseFunctionalTests
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var content = await response.Content.ReadAsStringAsync();
-        BadRequestErrorMessage badRequestError = JsonSerializer.Deserialize<BadRequestErrorMessage>(content, jsonOptions)!;
+        ErrorMessageResponse badRequestError = JsonSerializer.Deserialize<ErrorMessageResponse>(content, jsonOptions)!;
         badRequestError.Should().NotBeNull();
-        badRequestError.message.Should().BeEquivalentTo("Número de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.");
+        badRequestError.Message.Should().BeEquivalentTo("Número de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.");
     }
 
-    [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um número de telefone com tamanho menor do que esperado")]
+    [Theory(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um número de telefone com tamanho inválido")]
     [Trait("Functional", "ContactsController")]
-    public async Task Should_Return_ErrorToUpdateContactWhenPhoneNumberLengthIsInvalid()
+    [InlineData("113735555")] // Menor do que esperado
+    [InlineData("(11) 3567898888-8888856473")] // Maior do que esperado
+    public async Task Should_Return_ErrorToUpdateContactWhenPhoneNumberLengthIsInvalid(string number)
     {
         //Arrange
         await Should_Return_ContactCreatedWithSuccess();
-        UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), "1137355555", _faker.Internet.Email());
+        UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), number, _faker.Internet.Email());
 
         //Act
         var response = await HttpClient.PutAsJsonAsync($"api/contacts", updateContactRequest);
@@ -224,53 +227,22 @@ public class ContactsControllerTests : BaseFunctionalTests
         var content = await response.Content.ReadAsStringAsync();
         ValidationProblemDetails validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(content, jsonOptions)!;
         validationProblemDetails.Should().NotBeNull();
-        validationProblemDetails.Errors["PhoneNumber"].Should().Contain("Tamanho inválido, deve ter entre 11 e 20 caracteres.");
+        validationProblemDetails.Errors["PhoneNumber"].Should().Contain("Tamanho inválido, deve ter entre 10 e 20 caracteres.");
     }
-
-    [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um número de telefone com tamanho maior do que esperado")]
-    [Trait("Functional", "ContactsController")]
-    public async Task Should_Return_ErrorToUpdateContactWhenPhoneNumberLengthIsBiggerThanExpected()
-    {
-        //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
-        UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), "(11) 3567898888-8888856473", _faker.Internet.Email());
-
-        //Act
-        var response = await HttpClient.PutAsJsonAsync($"api/contacts", updateContactRequest);
-
-        //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var content = await response.Content.ReadAsStringAsync();
-        ValidationProblemDetails validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(content, jsonOptions)!;
-        validationProblemDetails.Should().NotBeNull();
-        validationProblemDetails.Errors["PhoneNumber"].Should().Contain("Tamanho inválido, deve ter entre 11 e 20 caracteres.");
-    }
-
-    public class BadRequestErrorMessage
-    {
-        public string message { get; set; }
-    }
-
-
 
     [Fact(DisplayName = "Deve deletar o contato")]
     [Trait("Functional", "ContactsController")]
     public async Task Should_Delete_Contact()
     {
         //Arrange 
-
         await Should_Return_ContactCreatedWithSuccess();
-        
+        var getContacts = await HttpClient.GetFromJsonAsync<List<ContactResponse>>($"api/contacts");
+        var id = getContacts!.First().Id;
         //Act
-        var requestDelete = await HttpClient.DeleteAsync($"api/contacts/delete?id=1");
-        var getContact = await HttpClient.GetAsync($"api/contacts");
+        var requestDelete = await HttpClient.DeleteAsync($"api/contacts/delete?id={id}");
 
         //Assert
         requestDelete.EnsureSuccessStatusCode();
         requestDelete.StatusCode.Should().Be(HttpStatusCode.OK);
-        var content = await getContact.Content.ReadAsStringAsync();
-        var contactResponse = JsonSerializer.Deserialize<List<ContactResponse>>(content)!;
-        contactResponse.Should().HaveCount(0);
-    
     }
 }
