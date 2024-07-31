@@ -24,6 +24,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IInsertContactUseCase, InsertContactUseCase>();
         services.AddScoped<IGetContactsUseCase, GetContactsUseCase>();
         services.AddScoped<IUpdateContactUseCase, UpdateContactUseCase>();
+        services.AddScoped<IDeleteContactsUseCase, DeleteContactUseCase>();
 
     }
 }

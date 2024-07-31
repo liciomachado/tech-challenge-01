@@ -251,4 +251,26 @@ public class ContactsControllerTests : BaseFunctionalTests
         public string message { get; set; }
     }
 
+
+
+    [Fact(DisplayName = "Deve deletar o contato")]
+    [Trait("Functional", "ContactsController")]
+    public async Task Should_Delete_Contact()
+    {
+        //Arrange 
+
+        await Should_Return_ContactCreatedWithSuccess();
+        
+        //Act
+        var requestDelete = await HttpClient.DeleteAsync($"api/contacts/delete?id=1");
+        var getContact = await HttpClient.GetAsync($"api/contacts");
+
+        //Assert
+        requestDelete.EnsureSuccessStatusCode();
+        requestDelete.StatusCode.Should().Be(HttpStatusCode.OK);
+        var content = await getContact.Content.ReadAsStringAsync();
+        var contactResponse = JsonSerializer.Deserialize<List<ContactResponse>>(content)!;
+        contactResponse.Should().HaveCount(0);
+    
+    }
 }

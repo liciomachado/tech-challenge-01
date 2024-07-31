@@ -19,6 +19,8 @@ public class DataContext : DbContext, IUnitOfWork
             nomeBuilder.Property(n => n.DDD).HasColumnName("ddd");
             nomeBuilder.Property(n => n.Value).HasColumnName("phone_number");
         });
+
+
     }
 
     public async Task<bool> Commit()
