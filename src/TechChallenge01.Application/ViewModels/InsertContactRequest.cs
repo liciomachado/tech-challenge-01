@@ -2,7 +2,6 @@
 
 namespace TechChallenge01.Application.ViewModels;
 
-public record InsertContactRequest([Required] string Nome,
-    [Required][MinLength(11)][MaxLength(20)] string PhoneNumber,
-    [EmailAddress] string Email);
- 
+public record InsertContactRequest([Required][MaxLength(255, ErrorMessage = "Tamanho inválido, máximo de 255 caracteres.")] string Nome,
+    [Required][Length(11, 20, ErrorMessage = "Tamanho inválido, deve ter entre 11 e 20 caracteres.")] string PhoneNumber,
+    [EmailAddress(ErrorMessage = "Este endereço de e-mail não é válido.")][MaxLength(50, ErrorMessage = "Tamanho inválido, máximo de 50 caracteres.")] string Email);

@@ -8,6 +8,14 @@ namespace TechChallenge01.Api.Controllers
     [ApiController]
     public class ContactsController : ControllerBase
     {
+        /// <summary>
+        /// Inclusão de um Contato
+        /// </summary>
+        /// <param name="insertContactUseCase">Contato a ser incluído</param>
+        /// <param name="insertContactRequest">Contato a ser incluído</param>
+        /// <returns>Retorna o Contato incluído</returns>
+        /// <response code="200">Sucesso na inclusão do Contato</response>
+        /// <response code="500">Não foi possível incluir o Contato</response>
         [HttpPost]
         public async Task<IActionResult> Add([FromServices] IInsertContactUseCase insertContactUseCase, InsertContactRequest insertContactRequest)
         {
@@ -16,14 +24,44 @@ namespace TechChallenge01.Api.Controllers
                 return Ok(await insertContactUseCase.Execute(insertContactRequest));
 
             }
-            catch (ApplicationException e)
+            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
                 return BadRequest(new { e.Message });
             }
         }
 
+        /// <summary>
+        /// Alteração de um Contato
+        /// </summary>
+        /// <param name="updateContactUseCase">Contato a ser alterado</param>
+        /// <param name="updateContactRequest">Contato a ser alterado</param>
+        /// <returns>Retorna o Contato alterado</returns>
+        /// <response code="200">Sucesso na alteração do Contato</response>
+        /// <response code="500">Não foi possível alterar o Contato</response>
+        [HttpPut]
+        public async Task<IActionResult> Update([FromServices] IUpdateContactUseCase updateContactUseCase, UpdateContactRequest updateContactRequest)
+        {
+            try
+            {
+                return Ok(await updateContactUseCase.Execute(updateContactRequest));
+
+            }
+            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+            {
+                return BadRequest(new { e.Message });
+            }
+        }
+
+        /// <summary>
+        /// Retorna os Contatos incluídos
+        /// </summary>
+        /// <param name="getContactsUseCase"></param>
+        /// <param name="ddd">Informe a Região para Consulta (DDD)</param>
+        /// <returns>Retorna a </returns>
+        /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
+        /// <response code="500">Não foi possível retornar os Contatos</response>
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] int? ddd)
+        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery]string? ddd)
         {
             return Ok(await getContactsUseCase.Execute(ddd));
         }

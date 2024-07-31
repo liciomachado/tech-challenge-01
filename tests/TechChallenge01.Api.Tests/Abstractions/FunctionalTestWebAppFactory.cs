@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using TechChallenge01.Infra.Data;
+using TechChallenge01.Infra.Data.Context;
 using Testcontainers.PostgreSql;
 
 namespace TechChallenge01.Api.Tests.Abstractions;
