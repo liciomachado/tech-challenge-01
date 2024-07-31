@@ -26,7 +26,7 @@ namespace TechChallenge01.Api.Controllers
             }
             catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new ErrorMessageResponse(e.Message));
             }
         }
 
@@ -48,7 +48,7 @@ namespace TechChallenge01.Api.Controllers
             }
             catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new ErrorMessageResponse(e.Message));
             }
         }
 
@@ -61,7 +61,7 @@ namespace TechChallenge01.Api.Controllers
         /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
         /// <response code="500">Não foi possível retornar os Contatos</response>
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery]string? ddd)
+        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] string? ddd)
         {
             return Ok(await getContactsUseCase.Execute(ddd));
         }
@@ -78,7 +78,7 @@ namespace TechChallenge01.Api.Controllers
             }
             catch (ApplicationException e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new ErrorMessageResponse(e.Message));
             }
         }
     }

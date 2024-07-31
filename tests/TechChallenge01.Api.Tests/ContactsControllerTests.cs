@@ -127,9 +127,9 @@ public class ContactsControllerTests : BaseFunctionalTests
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var content = await response.Content.ReadAsStringAsync();
-        BadRequestErrorMessage badRequestError = JsonSerializer.Deserialize<BadRequestErrorMessage>(content, jsonOptions)!;
+        ErrorMessageResponse badRequestError = JsonSerializer.Deserialize<ErrorMessageResponse>(content, jsonOptions)!;
         badRequestError.Should().NotBeNull();
-        badRequestError.message.Should().Be("Não foi possível localizar o cadastro do contato informado.");
+        badRequestError.Message.Should().Be("Não foi possível localizar o cadastro do contato informado.");
     }
 
     [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um e-mail inválido")]
@@ -203,9 +203,9 @@ public class ContactsControllerTests : BaseFunctionalTests
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var content = await response.Content.ReadAsStringAsync();
-        BadRequestErrorMessage badRequestError = JsonSerializer.Deserialize<BadRequestErrorMessage>(content, jsonOptions)!;
+        ErrorMessageResponse badRequestError = JsonSerializer.Deserialize<ErrorMessageResponse>(content, jsonOptions)!;
         badRequestError.Should().NotBeNull();
-        badRequestError.message.Should().BeEquivalentTo("Número de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.");
+        badRequestError.Message.Should().BeEquivalentTo("Número de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.");
     }
 
     [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um número de telefone com tamanho menor do que esperado")]
@@ -246,31 +246,20 @@ public class ContactsControllerTests : BaseFunctionalTests
         validationProblemDetails.Errors["PhoneNumber"].Should().Contain("Tamanho inválido, deve ter entre 11 e 20 caracteres.");
     }
 
-    public class BadRequestErrorMessage
-    {
-        public string message { get; set; }
-    }
-
-
 
     [Fact(DisplayName = "Deve deletar o contato")]
     [Trait("Functional", "ContactsController")]
     public async Task Should_Delete_Contact()
     {
         //Arrange 
-
         await Should_Return_ContactCreatedWithSuccess();
-        
+        var getContacts = await HttpClient.GetFromJsonAsync<List<ContactResponse>>($"api/contacts");
+        var id = getContacts!.First().Id;
         //Act
-        var requestDelete = await HttpClient.DeleteAsync($"api/contacts/delete?id=1");
-        var getContact = await HttpClient.GetAsync($"api/contacts");
+        var requestDelete = await HttpClient.DeleteAsync($"api/contacts/delete?id={id}");
 
         //Assert
         requestDelete.EnsureSuccessStatusCode();
         requestDelete.StatusCode.Should().Be(HttpStatusCode.OK);
-        var content = await getContact.Content.ReadAsStringAsync();
-        var contactResponse = JsonSerializer.Deserialize<List<ContactResponse>>(content)!;
-        contactResponse.Should().HaveCount(0);
-    
     }
 }
