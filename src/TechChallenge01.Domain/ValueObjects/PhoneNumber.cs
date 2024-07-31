@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace TechChallenge01.Domain.ValueObjects
 {
@@ -13,7 +14,8 @@ namespace TechChallenge01.Domain.ValueObjects
         public PhoneNumber(string value)
         {
             var formattedValue = Regex.Replace(value, "[^0-9]+", "");
-            if (!formattedValue.Length.Equals(11))
+
+            if (!IsValidPhone(formattedValue))
                 throw new ArgumentException("Número de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.");
             else
                 this.Value = formattedValue;
@@ -70,5 +72,11 @@ namespace TechChallenge01.Domain.ValueObjects
             96, // Amapá
             98, 99 // Maranhão
         };
+
+        public static bool IsValidPhone(string phone)
+        {
+            var phoneRegex = new Regex(@"^\d{10,11}$");
+            return phoneRegex.IsMatch(phone);
+        }
     }
 }
