@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace TechChallenge01.Domain.ValueObjects
 {
@@ -20,7 +19,7 @@ namespace TechChallenge01.Domain.ValueObjects
             else
                 this.Value = formattedValue;
 
-            int ddd = int.Parse(this.Value.Substring(0,2));
+            int ddd = int.Parse(this.Value.Substring(0, 2));
             if (!ValidDDDs.Contains(ddd))
             {
                 throw new ArgumentException("DDD inválido.");

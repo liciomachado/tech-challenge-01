@@ -45,7 +45,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         var content = await response.Content.ReadAsStringAsync();
         ContactResponse contactResponse = JsonSerializer.Deserialize<ContactResponse>(content, jsonOptions)!;
         contactResponse.Should().NotBeNull();
-        contactResponse.Nome.Should().BeEquivalentTo(insertContactRequest.Nome);
+        contactResponse.Name.Should().BeEquivalentTo(insertContactRequest.Name);
         var formatedPhone = Regex.Replace(insertContactRequest.PhoneNumber, "[^0-9]+", "");
         contactResponse.PhoneNumber.Should().BeEquivalentTo(formatedPhone);
         contactResponse.Email.Should().BeEquivalentTo(insertContactRequest.Email);
@@ -59,7 +59,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         await Should_Return_ContactCreatedWithSuccess();
 
         //Act
-        var response = await HttpClient.GetAsync($"api/contacts");
+        var response = await HttpClient.GetAsync($"api/contacts/GetAll");
 
         //Assert
         response.EnsureSuccessStatusCode();
@@ -78,7 +78,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         await Should_Return_ContactCreatedWithSuccess();
 
         //Act
-        var response = await HttpClient.GetAsync($"api/contacts?ddd=15");
+        var response = await HttpClient.GetAsync($"api/contacts/GetByDDD?ddd=15");
 
         //Assert
         response.EnsureSuccessStatusCode();
@@ -106,7 +106,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         var content = await response.Content.ReadAsStringAsync();
         ContactResponse contactResponse = JsonSerializer.Deserialize<ContactResponse>(content, jsonOptions)!;
         contactResponse.Should().NotBeNull();
-        contactResponse.Nome.Should().BeEquivalentTo(updateContactRequest.Nome);
+        contactResponse.Name.Should().BeEquivalentTo(updateContactRequest.Name);
         var formatedPhone = Regex.Replace(updateContactRequest.PhoneNumber, "[^0-9]+", "");
         contactResponse.PhoneNumber.Should().BeEquivalentTo(formatedPhone);
         contactResponse.Email.Should().BeEquivalentTo(updateContactRequest.Email);
@@ -187,7 +187,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         var content = await response.Content.ReadAsStringAsync();
         ValidationProblemDetails validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(content, jsonOptions)!;
         validationProblemDetails.Should().NotBeNull();
-        validationProblemDetails.Errors["Nome"].Should().Contain("Tamanho inválido, máximo de 255 caracteres.");
+        validationProblemDetails.Errors["Name"].Should().Contain("Tamanho inválido, máximo de 255 caracteres.");
     }
 
     [Fact(DisplayName = "Deve retornar erro ao tentar atualizar um contato com um número de telefone inválido")]
@@ -236,7 +236,7 @@ public class ContactsControllerTests : BaseFunctionalTests
     {
         //Arrange 
         await Should_Return_ContactCreatedWithSuccess();
-        var getContacts = await HttpClient.GetFromJsonAsync<List<ContactResponse>>($"api/contacts");
+        var getContacts = await HttpClient.GetFromJsonAsync<List<ContactResponse>>($"api/contacts/GetAll");
         var id = getContacts!.First().Id;
         //Act
         var requestDelete = await HttpClient.DeleteAsync($"api/contacts/delete?id={id}");
@@ -245,4 +245,7 @@ public class ContactsControllerTests : BaseFunctionalTests
         requestDelete.EnsureSuccessStatusCode();
         requestDelete.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+
+
 }

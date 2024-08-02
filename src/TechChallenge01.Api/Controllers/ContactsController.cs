@@ -53,6 +53,19 @@ namespace TechChallenge01.Api.Controllers
         }
 
         /// <summary>
+        /// Retorna todos os Contatos incluídos
+        /// </summary>
+        /// <param name="getContactsUseCase"></param>
+        /// <returns>Retorna a </returns>
+        /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
+        /// <response code="500">Não foi possível retornar os Contatos</response>
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase)
+        {
+            return Ok(await getContactsUseCase.GetAll());
+        }
+
+        /// <summary>
         /// Retorna os Contatos incluídos
         /// </summary>
         /// <param name="getContactsUseCase"></param>
@@ -60,10 +73,24 @@ namespace TechChallenge01.Api.Controllers
         /// <returns>Retorna a </returns>
         /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
         /// <response code="500">Não foi possível retornar os Contatos</response>
-        [HttpGet]
+        [HttpGet("GetByDDD")]
         public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] string? ddd)
         {
             return Ok(await getContactsUseCase.Execute(ddd));
+        }
+
+        /// <summary>
+        /// Retorna o  Contato  pelo Id
+        /// </summary>
+        /// <param name="getContactsUseCase"></param>
+        /// <param name="Id">Informe o id do Contato (Id)</param>
+        /// <returns>Retorna a </returns>
+        /// <response code="200">Sucesso na execução do retorno do  Contato </response>
+        /// <response code="500">Não foi possível retornar o  Contato </response>
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetByIdAsync([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] long Id)
+        {
+            return Ok(await getContactsUseCase.GetByIdAsync(Id));
         }
 
         [HttpDelete]
