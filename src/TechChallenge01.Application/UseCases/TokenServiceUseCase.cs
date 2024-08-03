@@ -21,9 +21,14 @@ namespace TechChallenge01.Application.UseCases
         public string GetToken(UsuarioToken usuario)
         {
             // Validar se o usuário Existe
-            // if !valido
-            //return string.Empty;
+            if ((string.IsNullOrWhiteSpace(usuario.Username)) || (string.IsNullOrWhiteSpace(usuario.Password))) {
+                return string.Empty;
+            }
 
+            if ((usuario.Username != "admin") || (usuario.Password != "admin"))
+            {
+                return string.Empty;
+            }
             // Gerar o token p/ o Usuario
             var tokenHandler = new JwtSecurityTokenHandler();
 
