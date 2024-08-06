@@ -1,7 +1,9 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -34,6 +36,12 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ContactCreatedWithSuccess()
     {
         //Arrange
+        var usuario = new UsuarioToken { Username = "admin", Password = "admin" };
+        var responseToken = await HttpClient.PostAsJsonAsync($"api/token", usuario); // Retorna token JWT Bearer
+        responseToken.EnsureSuccessStatusCode();
+        var tokenContent = await responseToken.Content.ReadAsStringAsync();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenContent);
+
         InsertContactRequest insertContactRequest = new(_faker.Name.FullName(), validPhoneNumber, _faker.Internet.Email());
 
         //Act

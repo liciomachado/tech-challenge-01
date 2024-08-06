@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
 
@@ -15,8 +16,10 @@ namespace TechChallenge01.Api.Controllers
         /// <param name="insertContactRequest">Contato a ser incluído</param>
         /// <returns>Retorna o Contato incluído</returns>
         /// <response code="200">Sucesso na inclusão do Contato</response>
-        /// <response code="500">Não foi possível incluir o Contato</response>
+        /// <response code="400">Não foi possível incluir o Contato</response>
+        /// <response code="401">Não autorizado</response>
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add([FromServices] IInsertContactUseCase insertContactUseCase, InsertContactRequest insertContactRequest)
         {
             try
@@ -37,8 +40,10 @@ namespace TechChallenge01.Api.Controllers
         /// <param name="updateContactRequest">Contato a ser alterado</param>
         /// <returns>Retorna o Contato alterado</returns>
         /// <response code="200">Sucesso na alteração do Contato</response>
-        /// <response code="500">Não foi possível alterar o Contato</response>
+        /// <response code="400">Não foi possível alterar o Contato</response>
+        /// <response code="401">Não autorizado</response>
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Update([FromServices] IUpdateContactUseCase updateContactUseCase, UpdateContactRequest updateContactRequest)
         {
             try
@@ -68,9 +73,9 @@ namespace TechChallenge01.Api.Controllers
         /// <summary>
         /// Retorna os Contatos incluídos
         /// </summary>
-        /// <param name="getContactsUseCase"></param>
+        /// <param name="getContactsUseCase">Retorna os Contatos incluídos</param>
         /// <param name="ddd">Informe a Região para Consulta (DDD)</param>
-        /// <returns>Retorna a </returns>
+        /// <returns>Retorna a lista de Contatos incluídos</returns>
         /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
         /// <response code="500">Não foi possível retornar os Contatos</response>
         [HttpGet("GetByDDD")]
@@ -93,7 +98,17 @@ namespace TechChallenge01.Api.Controllers
             return Ok(await getContactsUseCase.GetByIdAsync(Id));
         }
 
+        /// <summary>
+        /// Exclusão de um Contato
+        /// </summary>
+        /// <param name="deleteContactsUseCase">Exclusão de um Contato</param>
+        /// <param name="Id">Identificador do Contato</param>
+        /// <returns></returns>
+        /// <response code="200">Sucesso na exclusão do Contato</response>
+        /// <response code="400">Não foi possível excluir o Contato</response>
+        /// <response code="401">Não autorizado</response>
         [HttpDelete]
+        [Authorize]
         [Route("delete")]
         public async Task<IActionResult> Delete([FromServices] IDeleteContactsUseCase deleteContactsUseCase, [FromQuery] long Id)
         {
