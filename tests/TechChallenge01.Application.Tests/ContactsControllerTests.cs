@@ -129,7 +129,7 @@ namespace TechChallenge01.Application.Tests
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal("Test", result.Result.Name);
+            Assert.Equal("Teste", result.Result.Name);
         }
 
 
