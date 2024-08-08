@@ -25,6 +25,7 @@ Isso iniciará os contêineres Docker em segundo plano (-d para detached mode), 
 
 Acesse a aplicação em http://localhost:8080
 
+Usuário e senha para a geração de Token. Usuário:admin, senha: admin@123
 
 3. Parando a execução do projeto e removendo os containers
 
