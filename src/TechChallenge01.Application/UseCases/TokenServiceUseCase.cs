@@ -25,7 +25,7 @@ namespace TechChallenge01.Application.UseCases
                 return string.Empty;
             }
 
-            if ((usuario.Username != "admin") || (usuario.Password != "admin"))
+            if ((usuario.Username != "admin") || (usuario.Password != "admin@123"))
             {
                 return string.Empty;
             }

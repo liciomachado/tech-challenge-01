@@ -36,7 +36,7 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ContactCreatedWithSuccess()
     {
         //Arrange
-        var usuario = new UsuarioToken { Username = "admin", Password = "admin" };
+        var usuario = new UsuarioToken { Username = "admin", Password = "admin@123" };
         var responseToken = await HttpClient.PostAsJsonAsync($"api/token", usuario); // Retorna token JWT Bearer
         responseToken.EnsureSuccessStatusCode();
         var tokenContent = await responseToken.Content.ReadAsStringAsync();
