@@ -9,12 +9,30 @@ public class GetContactsUseCase(IContactRepository contactRepository) : IGetCont
     public async Task<List<ContactResponse>> Execute(string? ddd)
     {
         List<Contact> result = [];
-        if (ddd is not null)
-            result = await contactRepository.GetByDDD(ddd);
-        else
-            result = await contactRepository.GetAll();
+        if (ddd is null)
+            throw new ApplicationException("ddd não informado!");
+
+        result = await contactRepository.GetByDDD(ddd);
+
 
         var mapped = result.Select(x => new ContactResponse(x.Id, x.Name, x.PhoneNumber.Value, x.Email, x.PhoneNumber.DDD)).ToList();
         return mapped;
+    }
+
+    public async Task<List<ContactResponse>> GetAll()
+    {
+        List<Contact> result = [];
+        result = await contactRepository.GetAll();
+        var mapped = result.Select(x => new ContactResponse(x.Id, x.Name, x.PhoneNumber.Value, x.Email, x.PhoneNumber.DDD)).ToList();
+        return mapped;
+    }
+
+    public async Task<Contact?> GetByIdAsync(long id)
+    {
+
+       var concat = await contactRepository.GetByIdAsync(id);
+        if (concat is null)
+            throw new ApplicationException("Contato não encontrado!");
+        return concat;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using TechChallenge01.Application.Interfaces;
+﻿using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
 using TechChallenge01.Domain.Entities;
 using TechChallenge01.Domain.Interfaces;
@@ -12,7 +11,7 @@ public class InsertContactUseCase(IContactRepository contactRepository) : IInser
 {
     public async Task<ContactResponse> Execute(InsertContactRequest insertContactRequest)
     {
-        if (!ContactValidator.IsValidName(insertContactRequest.Nome))
+        if (!ContactValidator.IsValidName(insertContactRequest.Name))
             throw new ArgumentException("O nome é obrigatório.");
 
         if (!ContactValidator.IsValidEmail(insertContactRequest.Email))
@@ -20,7 +19,7 @@ public class InsertContactUseCase(IContactRepository contactRepository) : IInser
 
         var phoneNumber = new PhoneNumber(insertContactRequest.PhoneNumber);
 
-        var contact = new Contact(insertContactRequest.Nome, phoneNumber, insertContactRequest.Email);
+        var contact = new Contact(insertContactRequest.Name, phoneNumber, insertContactRequest.Email);
         contactRepository.Save(contact);
         await contactRepository.UnitOfWork.Commit();
 
