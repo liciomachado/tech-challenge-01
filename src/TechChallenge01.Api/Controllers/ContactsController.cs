@@ -63,7 +63,8 @@ namespace TechChallenge01.Api.Controllers
         /// <param name="getContactsUseCase"></param>
         /// <returns>Retorna a </returns>
         /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
-        /// <response code="500">Não foi possível retornar os Contatos</response>
+        /// <response code="400">Não foi possível retornar os Contatos</response>
+        /// <response code="401">Não autorizado</response>
         [HttpGet("GetAll")]
         [Authorize]
         public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase)
@@ -78,7 +79,8 @@ namespace TechChallenge01.Api.Controllers
         /// <param name="ddd">Informe a Região para Consulta (DDD)</param>
         /// <returns>Retorna a lista de Contatos incluídos</returns>
         /// <response code="200">Sucesso na execução do retorno dos Contatos</response>
-        /// <response code="500">Não foi possível retornar os Contatos</response>
+        /// <response code="400">Não foi possível retornar os Contatos</response>
+        /// <response code="401">Não autorizado</response>
         [HttpGet("GetByDDD")]
         [Authorize]
         public async Task<IActionResult> Get([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] string? ddd)
@@ -93,7 +95,8 @@ namespace TechChallenge01.Api.Controllers
         /// <param name="Id">Informe o id do Contato (Id)</param>
         /// <returns>Retorna a </returns>
         /// <response code="200">Sucesso na execução do retorno do  Contato </response>
-        /// <response code="500">Não foi possível retornar o  Contato </response>
+        /// <response code="400">Não foi possível retornar o  Contato </response>
+        /// <response code="401">Não autorizado</response>
         [HttpGet("GetById")]
         [Authorize]
         public async Task<IActionResult> GetByIdAsync([FromServices] IGetContactsUseCase getContactsUseCase, [FromQuery] long Id)
