@@ -35,7 +35,7 @@ namespace TechChallenge01.Api.Tests
         public async Task Should_Return_TokenCreatedWithSuccess()
         {
             //Arrange
-            var usuario = new UsuarioToken { Username = "admin", Password = "admin"};
+            var usuario = new UsuarioToken { Username = "admin", Password = "admin@123" };
 
             //Act
             var response = await HttpClient.PostAsJsonAsync($"api/token", usuario);
