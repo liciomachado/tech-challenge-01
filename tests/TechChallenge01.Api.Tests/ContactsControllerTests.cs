@@ -1,9 +1,7 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -36,12 +34,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ContactCreatedWithSuccess()
     {
         //Arrange
-        var usuario = new UsuarioToken { Username = "admin", Password = "admin@123" };
-        var responseToken = await HttpClient.PostAsJsonAsync($"api/token", usuario); // Retorna token JWT Bearer
-        responseToken.EnsureSuccessStatusCode();
-        var tokenContent = await responseToken.Content.ReadAsStringAsync();
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenContent);
-
         InsertContactRequest insertContactRequest = new(_faker.Name.FullName(), validPhoneNumber, _faker.Internet.Email());
 
         //Act
@@ -63,8 +55,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     [Trait("Functional", "ContactsController")]
     public async Task Should_Return_ListWithAllContacts()
     {
-        //Arrange 
-        await Should_Return_ContactCreatedWithSuccess();
 
         //Act
         var response = await HttpClient.GetAsync($"api/contacts/GetAll");
@@ -82,8 +72,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     [Trait("Functional", "ContactsController")]
     public async Task Should_Return_ListWithContactsFiltered()
     {
-        //Arrange 
-        await Should_Return_ContactCreatedWithSuccess();
 
         //Act
         var response = await HttpClient.GetAsync($"api/contacts/GetByDDD?ddd=15");
@@ -102,7 +90,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ContactUpdatedWithSuccess()
     {
         //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
         UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), validPhoneNumberToUpdate, _faker.Internet.Email());
 
         //Act
@@ -125,7 +112,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ErrorToUpdateContactWhenNotExists()
     {
         //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
         UpdateContactRequest updateContactRequest = new(999, _faker.Name.FullName(), validPhoneNumberToUpdate, _faker.Internet.Email());
 
         //Act
@@ -146,7 +132,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ErrorToUpdateContactWhenEmailIsInvalid(string email, string expectedErrorMessage)
     {
         //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
         UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), validPhoneNumberToUpdate, email);
 
         //Act
@@ -165,7 +150,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ErrorToUpdateContactWhenEmailLengthIsInvalid()
     {
         //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
         UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), validPhoneNumberToUpdate, $"{_faker.Lorem.Letter(39)}@dominio.com");
 
         //Act
@@ -184,7 +168,6 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ErrorToUpdateContactWhenNameLengthIsInvalid()
     {
         //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
         UpdateContactRequest updateContactRequest = new(1, _faker.Lorem.Letter(256), validPhoneNumberToUpdate, _faker.Internet.Email());
 
         //Act
@@ -203,8 +186,18 @@ public class ContactsControllerTests : BaseFunctionalTests
     public async Task Should_Return_ErrorToUpdateContactWhenPhoneNumberIsInvalid()
     {
         //Arrange
-        await Should_Return_ContactCreatedWithSuccess();
-        UpdateContactRequest updateContactRequest = new(1, _faker.Name.FullName(), "(1234) 98888-8888", _faker.Internet.Email());
+        InsertContactRequest insertContactRequest = new(_faker.Name.FullName(), validPhoneNumber, _faker.Internet.Email());
+
+        //Act
+        var response1 = await HttpClient.PostAsJsonAsync($"api/contacts", insertContactRequest);
+
+        //Assert
+        response1.EnsureSuccessStatusCode();
+        response1.StatusCode.Should().Be(HttpStatusCode.OK);
+        var content1 = await response1.Content.ReadAsStringAsync();
+        ContactResponse contactResponse = JsonSerializer.Deserialize<ContactResponse>(content1, jsonOptions)!;
+
+        UpdateContactRequest updateContactRequest = new(contactResponse.Id, _faker.Name.FullName(), "(1234) 98888-8888", _faker.Internet.Email());
 
         //Act
         var response = await HttpClient.PutAsJsonAsync($"api/contacts", updateContactRequest);

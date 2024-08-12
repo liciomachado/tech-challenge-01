@@ -38,7 +38,7 @@ public class ContactRepository(DataContext dataContext) : IContactRepository
 
     public async Task<List<Contact>> GetAll()
     {
-        return await dataContext.Contacts.ToListAsync();
+        return await dataContext.Contacts.OrderBy(x => x.Id).ToListAsync();
     }
 
     public async Task<List<Contact>> GetByDDD(string? value)

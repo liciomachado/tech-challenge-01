@@ -21,7 +21,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IContactRepository, ContactRepository>();
 
         //Services
-        services.AddSingleton<ITokenServiceUseCase, TokenServiceUseCase>();
+        services.AddSingleton<IAuthenticationUseCase, AuthenticationUseCase>();
         services.AddScoped<IInsertContactUseCase, InsertContactUseCase>();
         services.AddScoped<IGetContactsUseCase, GetContactsUseCase>();
         services.AddScoped<IUpdateContactUseCase, UpdateContactUseCase>();

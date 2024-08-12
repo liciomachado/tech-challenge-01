@@ -35,7 +35,7 @@ namespace TechChallenge01.Api.Tests
         public async Task Should_Return_TokenCreatedWithSuccess()
         {
             //Arrange
-            var usuario = new UsuarioToken { Username = "admin", Password = "admin@123" };
+            var usuario = new UserRequest { Username = "admin", Password = "admin"};
 
             //Act
             var response = await HttpClient.PostAsJsonAsync($"api/token", usuario);
@@ -50,7 +50,7 @@ namespace TechChallenge01.Api.Tests
         public async Task Should_Return_ErrorTokenUnauthorized()
         {
             //Arrange
-            var usuario = new UsuarioToken { Username = "admin", Password = "senhainvalida" };
+            var usuario = new UserRequest { Username = "admin", Password = "senhainvalida" };
 
             //Act
             var response = await HttpClient.PostAsJsonAsync($"api/token", usuario);

@@ -10,7 +10,7 @@ namespace TechChallenge01.Domain.Tests.ValueObjects
 
         }
 
-        [Trait("CreatePhoneNumber_WithValidNumber", "PhoneNumber")]
+        [Trait("ValidationPhoneNumber", "PhoneNumber")]
         [Theory(DisplayName = "Deve criar com sucesso um objeto de valor Phone quando o número de telefone for válido.")]
         [InlineData("(14) 3733-3388")] // Fixo com caracteres especiais e espaços
         [InlineData("(14) 9-4567-1234")] // Celular com caracteres especiais e espaços
@@ -32,7 +32,7 @@ namespace TechChallenge01.Domain.Tests.ValueObjects
             Assert.Matches(phoneRegex, formattedValue);
         }
 
-        [Trait("CreatePhoneNumber_WithInvalidNumber", "PhoneNumber")]
+        [Trait("ValidationPhoneNumber", "PhoneNumber")]
         [Theory(DisplayName = "Deve retornar uma exceção de argumento ao criar um objeto de valor Phone quando o número de telefone for inválido.")]
         [InlineData("")] // Vazio
         [InlineData("(12) 3777 999")] // Tamanho menor do que esperado
@@ -42,7 +42,7 @@ namespace TechChallenge01.Domain.Tests.ValueObjects
             var result = Assert.Throws<ArgumentException>(() => new PhoneNumber(number));
         }
 
-        [Trait("CreatePhoneNumber_WithValidDDD", "PhoneNumber")]
+        [Trait("ValidationPhoneNumber", "PhoneNumber")]
         [Theory(DisplayName = "Deve criar com sucesso um objeto de valor Phone quando o número do DDD for válido.")]
         [InlineData("(11) 9-4567-1234")] // DDD válido
         [InlineData("(73) 9-4567-1234")] // DDD válido
@@ -53,7 +53,7 @@ namespace TechChallenge01.Domain.Tests.ValueObjects
             Assert.Contains(int.Parse(phoneNumber.DDD), PhoneNumber.ValidDDDs);
         }
 
-        [Trait("CreatePhoneNumber_WithInvalidDDD", "PhoneNumber")]
+        [Trait("ValidationPhoneNumber", "PhoneNumber")]
         [Theory(DisplayName = "Deve retornar uma exceção de argumento ao criar um objeto de valor Phone quando o número do DDD for inválido.")]
         [InlineData("(073) 9-4567-1234")] // DDD inválido
         [InlineData("(72) 9-4567-1234")] // DDD inválido

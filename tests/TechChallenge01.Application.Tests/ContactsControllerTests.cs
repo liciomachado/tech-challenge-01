@@ -152,6 +152,5 @@ namespace TechChallenge01.Application.Tests
             Assert.Equal(2, result.Count());
             _contactRepositoryMock.Verify(repo => repo.GetAll(), Times.Once);
         }
-
     }
 }

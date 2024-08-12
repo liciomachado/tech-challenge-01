@@ -2,8 +2,8 @@
 
 namespace TechChallenge01.Application.Interfaces
 {
-    public interface ITokenServiceUseCase
+    public interface IAuthenticationUseCase
     {
-        public string GetToken(UsuarioToken usuario);
+        public string GetToken(UserRequest usuario);
     }
 }

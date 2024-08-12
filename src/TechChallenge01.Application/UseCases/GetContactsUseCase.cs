@@ -27,12 +27,12 @@ public class GetContactsUseCase(IContactRepository contactRepository) : IGetCont
         return mapped;
     }
 
-    public async Task<Contact?> GetByIdAsync(long id)
+    public async Task<ContactResponse?> GetByIdAsync(long id)
     {
 
-       var concat = await contactRepository.GetByIdAsync(id);
-        if (concat is null)
+        var contact = await contactRepository.GetByIdAsync(id);
+        if (contact is null)
             throw new ApplicationException("Contato não encontrado!");
-        return concat;
+        return new ContactResponse(contact.Id, contact.Name, contact.PhoneNumber.Value, contact.Email, contact.PhoneNumber.DDD);
     }
 }

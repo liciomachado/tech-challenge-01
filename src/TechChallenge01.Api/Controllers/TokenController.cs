@@ -8,11 +8,11 @@ namespace TechChallenge01.Api.Controllers
     [ApiController]
     public class TokenController : ControllerBase
     {
-        private readonly ITokenServiceUseCase _tokenService;
+        private readonly IAuthenticationUseCase _authenticationService;
 
-        public TokenController(ITokenServiceUseCase tokenService)
+        public TokenController(IAuthenticationUseCase tokenService)
         {
-            _tokenService = tokenService;
+            _authenticationService = tokenService;
         }
 
         /// <summary>
@@ -23,9 +23,9 @@ namespace TechChallenge01.Api.Controllers
         /// <response code="200">Token fornecido com sucesso</response>
         /// <response code="401">Usuário/Senha inválido (não autorizado)</response>
         [HttpPost]
-        public IActionResult Post([FromBody] UsuarioToken usuario)
+        public IActionResult Post([FromBody] UserRequest usuario)
         {
-            var token = _tokenService.GetToken(usuario);
+            var token = _authenticationService.GetToken(usuario);
 
             if (!string.IsNullOrWhiteSpace(token))
             {
