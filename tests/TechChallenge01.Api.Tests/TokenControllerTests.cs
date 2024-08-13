@@ -1,16 +1,10 @@
 ﻿using Bogus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
+using FluentAssertions;
 using System.Net;
-using System.Text;
+using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TechChallenge01.Api.Tests.Abstractions;
 using TechChallenge01.Application.ViewModels;
-using FluentAssertions;
 
 namespace TechChallenge01.Api.Tests
 {
@@ -35,7 +29,7 @@ namespace TechChallenge01.Api.Tests
         public async Task Should_Return_TokenCreatedWithSuccess()
         {
             //Arrange
-            var usuario = new UserRequest { Username = "admin", Password = "admin"};
+            var usuario = new UserRequest { Username = "admin", Password = "admin@123" };
 
             //Act
             var response = await HttpClient.PostAsJsonAsync($"api/token", usuario);
