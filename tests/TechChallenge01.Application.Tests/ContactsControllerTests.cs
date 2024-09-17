@@ -34,7 +34,7 @@ namespace TechChallenge01.Application.Tests
             //Arrange            
 
 
-            InsertContactRequest insertContactRequest = new("Jo„o Silva", "11-99999-9999", "email@valido.com");
+            InsertContactRequest insertContactRequest = new("Jo√£o Silva", "11-99999-9999", "email@valido.com");
 
             //Act
             await _insertConcatUseCase.Execute(insertContactRequest);
@@ -43,10 +43,10 @@ namespace TechChallenge01.Application.Tests
             _contactRepositoryMock.Verify(r => r.Save(It.IsAny<Contact>()), Times.Once);
         }
 
-        [Theory(DisplayName = "Deve retornar uma  exceÁ„o de um  contato inv·lido")]
-        [InlineData("", "1234567890", "joao.@example.com", "O nome È obrigatÛrio.")]
-        [InlineData("Jo„o Silva", "123", "joao.silva@example.com", "N˙mero de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.")]
-        [InlineData("Jo„o Silva", "1234567890", "invalid-email", "Formato de e-mail inv·lido.")]
+        [Theory(DisplayName = "Deve retornar uma  exce√ß√£o de um  contato inv√°lido")]
+        [InlineData("", "1234567890", "joao.@example.com", "O nome √© obrigat√≥rio.")]
+        [InlineData("Jo√£o Silva", "123", "joao.silva@example.com", "N√∫mero de telefone informado incorretamente, Modelo esperado: (dd) 99999-9999.")]
+        [InlineData("Jo√£o Silva", "1234567890", "invalid-email", "Formato de e-mail inv√°lido.")]
         public async Task Should_Return_ContactInvalidWith_ThrowsArgumentException(string Name, string phoneNumber, string email, string expectedErrorMessage)
         {
             //Arrange 
@@ -67,7 +67,7 @@ namespace TechChallenge01.Application.Tests
 
             var contacts = new List<Contact>
             {
-                new Contact( "Jo„o Silva", new PhoneNumber("11-99999-9999"),  "john.doe@example.com"  )
+                new Contact( "Jo√£o Silva", new PhoneNumber("11-99999-9999"),  "john.doe@example.com"  )
             };
             //Act
             _contactRepositoryMock.Setup(r => r.GetByDDD(It.IsAny<string?>())).ReturnsAsync(contacts);
