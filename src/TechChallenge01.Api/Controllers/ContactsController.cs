@@ -12,7 +12,7 @@ namespace TechChallenge01.Api.Controllers
         /// <summary>
         /// Inclusão de um Contato
         /// </summary>
-        /// <param name="insertContactUseCase">Contato a ser incluído</param>
+        /// <param name="insertContactUseCase">Contato a ser incluídoo</param>
         /// <param name="insertContactRequest">Contato a ser incluído</param>
         /// <returns>Retorna o Contato incluído</returns>
         /// <response code="200">Sucesso na inclusão do Contato</response>
