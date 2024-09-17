@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge01.Api.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge01.Application.Tests", "tests\TechChallenge01.Application.Tests\TechChallenge01.Application.Tests.csproj", "{50D92FBC-DE7B-4E47-B6B4-82EA3FC96DF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge01.Domain.Tests", "TechChallenge01.Domain.Tests\TechChallenge01.Domain.Tests.csproj", "{7A42317A-DCC1-4C76-A9F1-E3D5E041A8A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge01.Domain.Tests", "tests\TechChallenge01.Domain.Tests\TechChallenge01.Domain.Tests.csproj", "{7A42317A-DCC1-4C76-A9F1-E3D5E041A8A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
