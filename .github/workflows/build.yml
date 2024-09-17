@@ -26,6 +26,6 @@ jobs:
         with:
           context: .
           file: ./src/TechChallenge01.Api/Dockerfile  # Caminho para o Dockerfile
-          tags: 'latest'
+          tags: 'liciomachado/tech-challenge-group43:latest'
           push: true
           
