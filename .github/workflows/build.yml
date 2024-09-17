@@ -24,7 +24,7 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.7.0
         with:
-          context: ../src/TechChallenge01.Api/Dockerfile .
+          context: ./src/TechChallenge01.Api/Dockerfile .
           tags: 'latest'
           push: true
           
