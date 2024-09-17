@@ -27,19 +27,27 @@ jobs:
         run: dotnet build ./TechChallenge01.sln --configuration Release --no-restore
         
       - name: Test
-        run: dotnet test ./TechChallenge01.sln --configuration Release --no-restore --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory coveragereport
-        
+        #run: dotnet test ./TechChallenge01.sln --configuration Release --no-restore --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory coveragereport
+        run: dotnet test ./TechChallenge01.sln --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
         with:
-          reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-          targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
+          reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+          targetdir: "${{ github.workspace }}" # REQUIRED # The directory where the generated report should be saved.
           reporttypes: 'HtmlInline;Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, OpenCover, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, Html_BlueRed_Summary, JsonSummary, CodeClimate, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownAssembliesSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
           verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
           title: 'Test Results' # Optional title.
           tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
           toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
-      
+          
+      - name: Upload Combined Coverage XML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: ${{ github.workspace }}/Cobertura.xml
+          retention-days: 5
+          
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
