@@ -1,0 +1,30 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+env: 
+  DOTNET_VERSION: "8.x"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore
+      run: dotnet restore ./TechChallenge01.sln
+      
+    - name: Build
+      run: dotnet build ./TechChallenge01.sln --configuration Release --no-restore
+      
+    - name: Test
+      run: dotnet test ./TechChallenge01.sln --configuration Release --no-restore --no-build
