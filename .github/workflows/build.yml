@@ -24,7 +24,8 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.7.0
         with:
-          context: ./src/TechChallenge01.Api/Dockerfile .
+          context: ./src/TechChallenge01.Api  # Defina o diretório onde está o código do projeto
+          file: ./src/TechChallenge01.Api/Dockerfile  # Caminho para o Dockerfile
           tags: 'latest'
           push: true
           
