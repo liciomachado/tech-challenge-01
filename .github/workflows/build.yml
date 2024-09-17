@@ -27,7 +27,7 @@ jobs:
         run: dotnet build ./TechChallenge01.sln --configuration Release --no-restore
         
       - name: Test
-        run: dotnet test ./TechChallenge01.sln --configuration Release --no-restore --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
+        run: dotnet test ./TechChallenge01.sln --configuration Release --no-restore --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory coveragereport
         
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
