@@ -22,16 +22,16 @@ jobs:
           dotnet-version: '8.0.x'
       
       - name: Restore dependencies
-        run: dotnet restore ./tech-challenge-01-main/TechChallenge01.sln
+        run: dotnet restore ./TechChallenge01.sln
         
       - name: Build Solution
-        run: dotnet build ./tech-challenge-01-main/TechChallenge01.sln --configuration Release
+        run: dotnet build ./TechChallenge01.sln --configuration Release
 
       - name: Run Integration Tests
-        run: dotnet test ./tech-challenge-01-main/tests/TechChallenge01.Api.Tests/TechChallenge01.Api.Tests.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test ./tests/TechChallenge01.Api.Tests/TechChallenge01.Api.Tests.csproj --configuration Release --no-build --verbosity normal
 
       - name: Run Unit Tests - Domain
-        run: dotnet test ./tech-challenge-01-main/TechChallenge01.Domain.Tests/TechChallenge01.Domain.Tests.csproj --configuration Release --no-build --logger trx --verbosity normal
+        run: dotnet test ./tests/TechChallenge01.Domain.Tests/TechChallenge01.Domain.Tests.csproj --configuration Release --no-build --logger trx --verbosity normal
         
       - name: Run Unit Tests - Application
-        run: dotnet test ./tech-challenge-01-main/tests/TechChallenge01.Application.Tests/TechChallenge01.Application.Tests.csproj --configuration Release --no-build --logger trx --verbosity normal
+        run: dotnet test ./tests/TechChallenge01.Application.Tests/TechChallenge01.Application.Tests.csproj --configuration Release --no-build --logger trx --verbosity normal
