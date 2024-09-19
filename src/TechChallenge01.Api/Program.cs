@@ -70,6 +70,7 @@ builder.Services.AddAuthentication(x =>
     });
 
 var app = builder.Build();
+app.MapPrometheusScrapingEndpoint();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
