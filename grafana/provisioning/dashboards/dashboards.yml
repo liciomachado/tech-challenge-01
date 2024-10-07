@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    allowUiUpdates: true  # Permitir atualizações manuais na interface do Grafana
+    disableDeletion: false  # Permitir que dashboards sejam excluídos
+    updateIntervalSeconds: 10
+    options:
+      path: /var/lib/grafana/dashboards
