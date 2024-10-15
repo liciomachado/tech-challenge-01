@@ -13,7 +13,7 @@ namespace TechChallenge01.Domain.Tests.ValueObjects
         [Trait("ValidationPhoneNumber", "PhoneNumber")]
         [Theory(DisplayName = "Deve criar com sucesso um objeto de valor Phone quando o número de telefone for válido.")]
         [InlineData("(14) 3733-3388")] // Fixo com caracteres especiais e espaços
-        [InlineData("(14) 9-4567-1234")] // Celular com caracteres especiais e espaços
+        [InlineData("(14) 9-4567-1235")] // Celular com caracteres especiais e espaços
         [InlineData("(81) 3738 8896")] // Fixo com caracteres especiais e espaços
         [InlineData("(81) 9 9999 999")] // Celular com caracteres especiais e espaços
         [InlineData("(95)34561234")] // Fixo com caracteres especiais sem espaços
