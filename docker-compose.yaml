@@ -9,14 +9,34 @@ services:
     restart: always
     environment:
       ASPNETCORE_ENVIRONMENT: Docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
     depends_on:
       - db
+      - rabbitmq
     ports:
       - "8080:8080"
 
+  apigateway:
+    build:
+      context: .
+      dockerfile: ./src/TechChallenge01.ApiGateway/Dockerfile
+    container_name: apigateway
+    hostname: apigateway
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+    depends_on:
+      - api01
+    ports:
+      - "5000:5000"
+    networks:
+      - default
+
   db:
     image: postgres
-    container_name: postgress
+    container_name: postgres
     restart: always
     environment:
       POSTGRES_DB: tech_challenge
@@ -27,8 +47,20 @@ services:
     volumes:
       - ./Configs/script.sql:/docker-entrypoint-initdb.d/script.sql
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -40,10 +72,11 @@ services:
 
   grafana:
     image: grafana/grafana
+    container_name: grafana
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin@123
+      GF_SECURITY_ADMIN_PASSWORD: admin@123
     volumes:
       - ./grafana:/var/lib/grafana
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards

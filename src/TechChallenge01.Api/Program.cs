@@ -1,8 +1,10 @@
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using TechChallenge01.Application.Consumers;
 using TechChallenge01.Infra.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +52,33 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 var key = Encoding.ASCII.GetBytes(configuration.GetValue<string>("SecretJWT"));
+
+//// Configuração do MassTransit
+//builder.Services.AddMassTransit(x =>
+//{
+//    // Registra o consumidor específico
+//    x.AddConsumer<InsertContactConsumer>();
+
+
+//    // Configura o RabbitMQ
+//    x.UsingRabbitMq((context, cfg) =>
+//    {
+//        var rabbitMqHost = configuration["RabbitMQ:RABBITMQ_HOST"];
+//        var rabbitMqPort = int.Parse(configuration["RabbitMQ:RABBITMQ_PORT"]); // Certifique-se de que é int
+//        var rabbitMqUser = configuration["RabbitMQ:RABBITMQ_USER"];
+//        var rabbitMqPassword = configuration["RabbitMQ:RABBITMQ_PASSWORD"];
+
+//        // Configuração do Host do RabbitMQ
+//        cfg.Host(rabbitMqHost, (ushort)rabbitMqPort, "/", h => // Certifique-se de que o porto é ushort
+//        {
+//            h.Username(rabbitMqUser);
+//            h.Password(rabbitMqPassword);
+//        });
+
+//        // Configuração automática dos endpoints
+//        cfg.ConfigureEndpoints(context);
+//    });
+//});
 
 builder.Services.AddAuthentication(x =>
 {

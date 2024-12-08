@@ -15,7 +15,7 @@ public class InsertContactUseCase(IContactRepository contactRepository) : IInser
             throw new ArgumentException("O nome é obrigatório.");
 
         if (!ContactValidator.IsValidEmail(insertContactRequest.Email))
-            throw new ArgumentException("Formato de e-mail inválido.");
+            throw new ArgumentException($"Formato de e-mail inválido.{insertContactRequest.Email}");
 
         var phoneNumber = new PhoneNumber(insertContactRequest.PhoneNumber);
 

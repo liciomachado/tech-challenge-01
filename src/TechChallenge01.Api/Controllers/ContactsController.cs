@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TechChallenge01.Application.Events;
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
 
@@ -18,21 +19,43 @@ namespace TechChallenge01.Api.Controllers
         /// <response code="200">Sucesso na inclusão do Contato</response>
         /// <response code="400">Não foi possível incluir o Contato</response>
         /// <response code="401">Não autorizado</response>
+        //[HttpPost]
+        //[Authorize]
+        //public async Task<IActionResult> Add([FromServices] IInsertContactUseCase insertContactUseCase, InsertContactRequest insertContactRequest)
+        //{
+        //    try
+        //    {
+        //        return Ok(await insertContactUseCase.Execute(insertContactRequest));
+
+        //    }
+        //    catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+        //    {
+        //        return BadRequest(new ErrorMessageResponse(e.Message));
+        //    }
+        //}
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Add([FromServices] IInsertContactUseCase insertContactUseCase, InsertContactRequest insertContactRequest)
+        public async Task<IActionResult> Add(
+                                            [FromServices] IContactPublisher contactPublisher, // Serviço dedicado para publicar
+                                            InsertContactRequest insertContactRequest)
         {
             try
             {
-                return Ok(await insertContactUseCase.Execute(insertContactRequest));
+                // Cria a mensagem e publica na fila
+                await contactPublisher.PublishContactAsync(new InsertContactEvent
+                {
+                    Name = insertContactRequest.Name,
+                    Email = insertContactRequest.Email,
+                    PhoneNumber = insertContactRequest.PhoneNumber
+                });
 
+                return Ok();  
             }
-            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+            catch (Exception e)
             {
                 return BadRequest(new ErrorMessageResponse(e.Message));
             }
         }
-
         /// <summary>
         /// Alteração de um Contato
         /// </summary>

@@ -13,7 +13,9 @@ using TechChallenge01.Application.UseCases;
 using TechChallenge01.Domain.Interfaces;
 using TechChallenge01.Infra.Data.Context;
 using TechChallenge01.Infra.Data.Repositories;
- 
+using MassTransit;
+using TechChallenge01.Application.Consumers;
+
 
 
 namespace TechChallenge01.Infra.IoC;
@@ -35,10 +37,29 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IGetContactsUseCase, GetContactsUseCase>();
         services.AddScoped<IUpdateContactUseCase, UpdateContactUseCase>();
         services.AddScoped<IDeleteContactsUseCase, DeleteContactUseCase>();
-
+        services.AddScoped<IContactPublisher, ContactPublisher>();
         const string serviceName = "MyService";
 
+         
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumer<InsertContactConsumer>();
 
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("rabbitmq", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                cfg.ReceiveEndpoint("insert-contact-queue", e =>
+                {
+                    e.ConfigureConsumer<InsertContactConsumer>(context);
+                });
+                cfg.ConfigureEndpoints(context);
+            });
+        });
        
         services.AddOpenTelemetry()
        .ConfigureResource(resource => resource.AddService(serviceName))
@@ -56,23 +77,7 @@ public static class DependencyInjectionConfiguration
               .AddPrometheusExporter();  // Exposição para Prometheus
       });
 
-        //// Configurar o Prometheus
-        //services.AddOpenTelemetry()
-        //      .WithTracing(tracerProviderBuilder =>
-        //      {
-        //          tracerProviderBuilder
-        //              .AddAspNetCoreInstrumentation()
-        //              .AddHttpClientInstrumentation()
-        //              .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MyService"));
-        //          //.AddConsoleExporter(); // Opcional: Adiciona um exportador de traços ao console
-        //      })
-        //      .WithMetrics(metricsProviderBuilder =>
-        //      {
-        //          metricsProviderBuilder
-        //              .AddAspNetCoreInstrumentation()
-        //              .AddHttpClientInstrumentation()
-        //              .AddPrometheusExporter(); // Exporta métricas no formato Prometheus
-        //      });
+        
 
     }
 }

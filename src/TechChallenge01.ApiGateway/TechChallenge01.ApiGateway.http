@@ -1,0 +1,6 @@
+@TechChallenge01.ApiGateway_HostAddress = http://localhost:5241
+
+GET {{TechChallenge01.ApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
