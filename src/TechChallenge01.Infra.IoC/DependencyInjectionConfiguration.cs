@@ -18,6 +18,7 @@ using TechChallenge01.Application.Consumers;
 
 
 
+
 namespace TechChallenge01.Infra.IoC;
 
 public static class DependencyInjectionConfiguration
@@ -40,11 +41,13 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IContactPublisher, ContactPublisher>();
         const string serviceName = "MyService";
 
-         
+
+
+
         services.AddMassTransit(x =>
         {
             x.AddConsumer<InsertContactConsumer>();
-
+            x.AddConsumer<UpdateContactConsumer>();
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host("rabbitmq", h =>
@@ -53,14 +56,17 @@ public static class DependencyInjectionConfiguration
                     h.Password("guest");
                 });
 
-                cfg.ReceiveEndpoint("insert-contact-queue", e =>
+                cfg.ReceiveEndpoint("contact-queue", e =>
                 {
                     e.ConfigureConsumer<InsertContactConsumer>(context);
+                    e.ConfigureConsumer<UpdateContactConsumer>(context);
                 });
+
+                
                 cfg.ConfigureEndpoints(context);
             });
         });
-       
+
         services.AddOpenTelemetry()
        .ConfigureResource(resource => resource.AddService(serviceName))
        .WithTracing(tracing => tracing

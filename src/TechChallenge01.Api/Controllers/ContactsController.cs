@@ -42,7 +42,7 @@ namespace TechChallenge01.Api.Controllers
             try
             {
                 // Cria a mensagem e publica na fila
-                await contactPublisher.PublishContactAsync(new InsertContactEvent
+                await contactPublisher.PublishInsertContacttAsync(new InsertContactEvent
                 {
                     Name = insertContactRequest.Name,
                     Email = insertContactRequest.Email,
@@ -67,17 +67,28 @@ namespace TechChallenge01.Api.Controllers
         /// <response code="401">Não autorizado</response>
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Update([FromServices] IUpdateContactUseCase updateContactUseCase, UpdateContactRequest updateContactRequest)
+        public async Task<IActionResult> Update([FromServices] IContactPublisher contactPublisher, // Serviço dedicado para publicar
+            UpdateContactRequest updateContactRequest)
         {
+            
+
             try
             {
-                return Ok(await updateContactUseCase.Execute(updateContactRequest));
+                // Cria a mensagem e publica na fila
+                await contactPublisher.PublishUpdateContacttAsync(new UpdateContactMenssage
+                {   Id = updateContactRequest.Id,
+                    Name = updateContactRequest.Name,
+                    Email = updateContactRequest.Email,
+                    PhoneNumber = updateContactRequest.PhoneNumber
+                });
 
+                return Ok();
             }
-            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+            catch (Exception e)
             {
                 return BadRequest(new ErrorMessageResponse(e.Message));
             }
+
         }
 
         /// <summary>

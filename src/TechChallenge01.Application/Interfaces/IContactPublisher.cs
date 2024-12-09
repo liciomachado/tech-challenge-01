@@ -9,6 +9,7 @@ namespace TechChallenge01.Application.Interfaces
 {
     public  interface IContactPublisher
     {
-        Task PublishContactAsync(InsertContactEvent message);
+        Task PublishInsertContacttAsync(InsertContactEvent message);
+        Task PublishUpdateContacttAsync(UpdateContactMenssage message);
     }
 }

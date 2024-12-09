@@ -1,6 +1,5 @@
 ﻿using MassTransit;
-using Messaging.Models;
-using Messaging.Publishers;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

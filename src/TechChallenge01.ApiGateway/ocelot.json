@@ -5,7 +5,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "api01",
+          "Host": "localhost",
           "Port": 8080
         }
       ],
@@ -19,6 +19,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://apigateway:5000"
+    "BaseUrl": "http://localhost:5000"
   }
 }

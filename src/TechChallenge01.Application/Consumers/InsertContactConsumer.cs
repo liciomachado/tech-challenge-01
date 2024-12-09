@@ -1,10 +1,10 @@
-﻿ using Messaging.Models;
+﻿ 
 using MassTransit;
 using System.Threading.Tasks;
 using TechChallenge01.Domain.Entities;
 using TechChallenge01.Application.Events;
 using TechChallenge01.Application.Interfaces;
-using Messaging.Consumers;
+ 
 using TechChallenge01.Application.ViewModels;
 
 namespace TechChallenge01.Application.Consumers;
