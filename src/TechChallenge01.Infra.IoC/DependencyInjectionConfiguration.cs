@@ -50,19 +50,29 @@ public static class DependencyInjectionConfiguration
             x.AddConsumer<UpdateContactConsumer>();
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("rabbitmq", h =>
-                {
-                    h.Username("guest");
-                    h.Password("guest");
-                });
 
-                cfg.ReceiveEndpoint("contact-queue", e =>
+                var rabbitMqHost = configuration["RabbitMQ:RABBITMQ_HOST"];
+                var rabbitMqUser = configuration["RabbitMQ:RABBITMQ_USER"];
+                var rabbitMqPassword = configuration["RabbitMQ:RABBITMQ_PASSWORD"];
+
+                cfg.Host(rabbitMqHost, h =>
+                {
+                    h.Username(rabbitMqUser);
+                    h.Password(rabbitMqPassword);
+                });
+                // Configuração de fila específica para InsertContactConsumer
+                cfg.ReceiveEndpoint("insert-contact-queue", e =>
                 {
                     e.ConfigureConsumer<InsertContactConsumer>(context);
+                });
+
+                // Configuração de fila específica para UpdateContactConsumer
+                cfg.ReceiveEndpoint("update-contact-queue", e =>
+                {
                     e.ConfigureConsumer<UpdateContactConsumer>(context);
                 });
 
-                
+
                 cfg.ConfigureEndpoints(context);
             });
         });
