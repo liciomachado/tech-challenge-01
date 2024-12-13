@@ -2,7 +2,7 @@
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
 
-namespace TechChallenge01.Api.Controllers
+namespace TechChallenge01.TokenApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

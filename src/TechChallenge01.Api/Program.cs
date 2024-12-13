@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
-using TechChallenge01.Application.Consumers;
 using TechChallenge01.Infra.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +17,7 @@ builder.Services.AddSwaggerGen(c =>
         Description =
         "JWT Authorization Header - utilizado com Bearer Authentication.\r\n\r\n" +
         "Digite 'Bearer' [espaço] e então seu token no campo abaixo.\r\n\r\n" +
-        "Exemplo (infomrar sem as aspas): 'Bearer 12345abcdef'",
+        "Exemplo (informar sem as aspas): 'Bearer 12345abcdef'",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -53,24 +52,23 @@ var configuration = new ConfigurationBuilder()
     .Build();
 var key = Encoding.ASCII.GetBytes(configuration.GetValue<string>("SecretJWT"));
 
- 
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(j =>
+.AddJwtBearer(j =>
+{
+    j.RequireHttpsMetadata = false;
+    j.SaveToken = true;
+    j.TokenValidationParameters = new TokenValidationParameters()
     {
-        j.RequireHttpsMetadata = false;
-        j.SaveToken = true;
-        j.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 var app = builder.Build();
 app.MapPrometheusScrapingEndpoint();

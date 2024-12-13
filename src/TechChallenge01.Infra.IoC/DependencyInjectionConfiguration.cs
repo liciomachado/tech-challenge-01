@@ -33,16 +33,12 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IContactRepository, ContactRepository>();
 
         //Services
-        services.AddSingleton<IAuthenticationUseCase, AuthenticationUseCase>();
         services.AddScoped<IInsertContactUseCase, InsertContactUseCase>();
         services.AddScoped<IGetContactsUseCase, GetContactsUseCase>();
         services.AddScoped<IUpdateContactUseCase, UpdateContactUseCase>();
         services.AddScoped<IDeleteContactsUseCase, DeleteContactUseCase>();
         services.AddScoped<IContactPublisher, ContactPublisher>();
         const string serviceName = "MyService";
-
-
-
 
         services.AddMassTransit(x =>
         {
@@ -55,7 +51,7 @@ public static class DependencyInjectionConfiguration
                 var rabbitMqUser = configuration["RabbitMQ:RABBITMQ_USER"];
                 var rabbitMqPassword = configuration["RabbitMQ:RABBITMQ_PASSWORD"];
 
-                cfg.Host(rabbitMqHost, h =>
+                    cfg.Host(rabbitMqHost, h =>
                 {
                     h.Username(rabbitMqUser);
                     h.Password(rabbitMqPassword);
@@ -78,22 +74,18 @@ public static class DependencyInjectionConfiguration
         });
 
         services.AddOpenTelemetry()
-       .ConfigureResource(resource => resource.AddService(serviceName))
-       .WithTracing(tracing => tracing
-           .AddAspNetCoreInstrumentation()
-           .AddHttpClientInstrumentation()
-         
-           )
-      .WithMetrics(metrics =>
-      {
-          metrics
-              .AddRuntimeInstrumentation()
-              .AddProcessInstrumentation()
-              .AddAspNetCoreInstrumentation()
-              .AddPrometheusExporter();  // Exposição para Prometheus
-      });
-
-        
-
+        .ConfigureResource(resource => resource.AddService(serviceName))
+        .WithTracing(tracing => tracing
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+        )
+        .WithMetrics(metrics => 
+        {
+            metrics
+                .AddRuntimeInstrumentation()
+                .AddProcessInstrumentation()
+                .AddAspNetCoreInstrumentation()
+                .AddPrometheusExporter();  // Exposição para Prometheus
+        });
     }
 }
