@@ -19,6 +19,18 @@ services:
     ports:
       - "8080:8080"
 
+  tokenapi:
+    container_name: tokenapi
+    hostname: tokenapi
+    build:
+      context: .
+      dockerfile: ./src/TechChallenge01.TokenApi/Dockerfile        
+    restart: always
+    depends_on:
+     - db
+    ports:
+     - "8081:8080"
+
   apigateway:
     build:
       context: .
