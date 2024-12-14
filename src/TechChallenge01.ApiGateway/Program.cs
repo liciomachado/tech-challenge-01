@@ -6,7 +6,10 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
-
+IConfiguration configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("ocelot.json")
+    .Build();
 // Adiciona Ocelot com Polly (Circuit Breaker)
 builder.Services.AddOcelot().AddPolly();
 
