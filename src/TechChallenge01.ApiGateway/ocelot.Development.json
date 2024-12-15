@@ -3,11 +3,11 @@
     {
       // Configuração do primeiro serviço
       "DownstreamPathTemplate": "/api/Contacts/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "api01",
-          "Port": 8080
+          "Host": "localhost",
+          "Port": 5001
         }
       ],
       "UpstreamPathTemplate": "/api/Contacts/{everything}",
@@ -16,11 +16,11 @@
     {
       // Configuração do segundo serviço
       "DownstreamPathTemplate": "/api/token",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "tokenapi",
-          "Port": 8080
+          "Host": "localhost",
+          "Port": 5002
         }
       ],
       "UpstreamPathTemplate": "/api/Token/{everything}",
@@ -28,6 +28,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5000"
+    "BaseUrl": "https://localhost:7158"
   }
 }
