@@ -23,9 +23,15 @@ namespace TechChallenge01.Application.Publisher
 
         public async Task PublishContactAsync(UpdateContactRequest request)
         {
-            var contactEvent = new UpdateContactRequest(request.Id, request.Name, request.Email, request.PhoneNumber);
+            var updateEvent = new UpdateContactEvent
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber
+            };
 
-            await _bus.Publish(contactEvent);
+            await _bus.Publish(updateEvent);
         }
     }
 }

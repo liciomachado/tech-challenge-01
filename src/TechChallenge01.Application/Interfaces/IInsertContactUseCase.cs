@@ -1,4 +1,5 @@
-﻿using TechChallenge01.Application.ViewModels;
+﻿using Microsoft.AspNetCore.Mvc;
+using TechChallenge01.Application.ViewModels;
 
 namespace TechChallenge01.Application.Interfaces;
 

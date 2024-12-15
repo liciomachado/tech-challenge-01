@@ -46,6 +46,25 @@ services:
     networks:
       - default
 
+  rabbitmq-consumer:
+    container_name: rabbitmq-consumer
+    hostname: rabbitmq-consumer
+    build:
+      context: .
+      dockerfile: ./src/TechChallenge01.Infra.Consumer/Dockerfile        
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      - db
+      - rabbitmq
+    ports:
+      - "8082:8080"
+
   db:
     image: postgres
     container_name: postgres

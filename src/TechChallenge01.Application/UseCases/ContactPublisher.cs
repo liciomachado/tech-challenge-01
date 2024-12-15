@@ -20,29 +20,18 @@ public class ContactPublisher : IContactPublisher
         _publishEndpoint = publishEndpoint;
     }
 
-    
-
     public async Task PublishInsertContacttAsync(InsertContactEvent message)
     {
-        if (!ContactValidator.IsValidName(message.Name))
-            throw new ArgumentException("O nome é obrigatório.");
-
-        if (!ContactValidator.IsValidEmail(message.Email))
-            throw new ArgumentException($"Formato de e-mail inválido.{message.Email}");
-
-
         await _publishEndpoint.Publish(message);
     }
 
-    public async Task PublishUpdateContacttAsync(UpdateContactMenssage message)
+    public async Task PublishUpdateContacttAsync(UpdateContactEvent message)
     {
-        if (!ContactValidator.IsValidName(message.Name))
-            throw new ArgumentException("O nome é obrigatório.");
+        await _publishEndpoint.Publish(message);
+    }
 
-        if (!ContactValidator.IsValidEmail(message.Email))
-            throw new ArgumentException($"Formato de e-mail inválido.{message.Email}");
-
-
+    public async Task PublishDeleteContactAsync(DeleteContactEvent message)
+    {
         await _publishEndpoint.Publish(message);
     }
 }
