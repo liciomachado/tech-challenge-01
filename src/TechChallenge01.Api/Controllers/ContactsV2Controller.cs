@@ -6,19 +6,18 @@ using TechChallenge01.Application.ViewModels;
 
 namespace TechChallenge01.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v2/[controller]")]
     [ApiController]
-    public class ContactsController : ControllerBase
+    public class ContactsV2Controller : ControllerBase
     {
         /// <summary>
         /// Inclusão de um Contato
         /// </summary>
-        /// <param name="insertContactUseCase">Contato a ser incluído</param>
-        /// <param name="insertContactRequest">Contato a ser incluído</param>
+        /// <param name = "insertContactRequest" > Contato a ser incluído</param>
         /// <returns>Retorna o Contato incluído</returns>
-        /// <response code="200">Sucesso na inclusão do Contato</response>
-        /// <response code="400">Não foi possível incluir o Contato</response>
-        /// <response code="401">Não autorizado</response>
+        /// <response code = "200" > Sucesso na inclusão do Contato</response>
+        /// <response code = "400" > Não foi possível incluir o Contato</response>
+        /// <response code = "401" > Não autorizado</response>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Add([FromServices] IInsertContactUseCase insertContactUseCase, InsertContactRequest insertContactRequest)
@@ -26,12 +25,14 @@ namespace TechChallenge01.Api.Controllers
             try
             {
                 return Ok(await insertContactUseCase.Execute(insertContactRequest));
+
             }
             catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
                 return BadRequest(new ErrorMessageResponse(e.Message));
             }
         }
+
         /// <summary>
         /// Alteração de um Contato
         /// </summary>
@@ -43,17 +44,28 @@ namespace TechChallenge01.Api.Controllers
         /// <response code="401">Não autorizado</response>
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Update([FromServices] IUpdateContactUseCase updateContactUseCase, UpdateContactRequest updateContactRequest)
+        public async Task<IActionResult> Update([FromServices] IContactPublisher contactPublisher, // Serviço dedicado para publicar
+            UpdateContactRequest updateContactRequest)
         {
+            
+
             try
             {
-                return Ok(await updateContactUseCase.Execute(updateContactRequest));
+                // Cria a mensagem e publica na fila
+                await contactPublisher.PublishUpdateContacttAsync(new UpdateContactMenssage
+                {   Id = updateContactRequest.Id,
+                    Name = updateContactRequest.Name,
+                    Email = updateContactRequest.Email,
+                    PhoneNumber = updateContactRequest.PhoneNumber
+                });
 
+                return Ok();
             }
-            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+            catch (Exception e)
             {
                 return BadRequest(new ErrorMessageResponse(e.Message));
             }
+
         }
 
         /// <summary>

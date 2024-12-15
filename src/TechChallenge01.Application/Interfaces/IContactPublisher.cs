@@ -10,6 +10,6 @@ namespace TechChallenge01.Application.Interfaces
     public  interface IContactPublisher
     {
         Task PublishInsertContacttAsync(InsertContactEvent message);
-        Task PublishUpdateContacttAsync(UpdateContactMenssage message);
+        Task PublishUpdateContacttAsync(UpdateContactEvent message);
     }
 }

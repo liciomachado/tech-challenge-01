@@ -6,16 +6,18 @@ using TechChallenge01.Application.Events;
 using TechChallenge01.Application.Interfaces;
  
 using TechChallenge01.Application.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using TechChallenge01.Domain.Interfaces;
+using TechChallenge01.Domain.ValueObjects;
 
 namespace TechChallenge01.Application.Consumers;
 
 public class InsertContactConsumer : IConsumer<InsertContactEvent>
 {
-    private readonly IInsertContactUseCase _insertContactUseCase;
-
-    public InsertContactConsumer(IInsertContactUseCase insertContactUseCase)
+    private readonly IServiceProvider _serviceProvider;
+    public InsertContactConsumer(IServiceProvider serviceProvider)
     {
-        _insertContactUseCase = insertContactUseCase;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task Consume(ConsumeContext<InsertContactEvent> context)
@@ -24,18 +26,27 @@ public class InsertContactConsumer : IConsumer<InsertContactEvent>
 
         try
         {
-            // Converte a mensagem em uma solicitação para o caso de uso
-            var request = new InsertContactRequest(message.Name, message.PhoneNumber, message.Email);
+            var contact = new Contact(message.Name, new PhoneNumber(message.PhoneNumber), message.Email);
 
-            System.Threading.Thread.Sleep(10000);
-            // Executa o caso de uso
-            var result = await _insertContactUseCase.Execute(request);
+            // Grava contato no DB
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var scopedProcessingService =
+                    scope.ServiceProvider
+                    .GetRequiredService<IContactRepository>();
 
-            Console.WriteLine($"Contato inserido com sucesso: {result.Id}");
+
+                scopedProcessingService.Save(contact);
+                await scopedProcessingService.UnitOfWork.Commit();
+            }
+
+            System.Threading.Thread.Sleep(5000);
+
+            Console.WriteLine($"Contato inserido com sucesso: {contact.Id}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao processar mensagem:email{message.Email} {ex.Message}");
+            Console.WriteLine($"Erro ao processar mensagem:Email:{message.Email} {ex.Message}");
         }
     }
 }

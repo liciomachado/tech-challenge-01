@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,37 +9,46 @@ using TechChallenge01.Application.Events;
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.UseCases;
 using TechChallenge01.Application.ViewModels;
+using TechChallenge01.Domain.Entities;
+using TechChallenge01.Domain.Interfaces;
+using TechChallenge01.Domain.ValueObjects;
 
 namespace TechChallenge01.Application.Consumers
 {
-    public class UpdateContactConsumer : IConsumer<UpdateContactMenssage>
+    public class UpdateContactConsumer : IConsumer<UpdateContactEvent>
     {
-        private readonly IUpdateContactUseCase _updateContactUseCase;
-
-        public UpdateContactConsumer(IUpdateContactUseCase updateContactUseCase)
+        private readonly IServiceProvider _serviceProvider;
+        public UpdateContactConsumer(IServiceProvider serviceProvider)
         {
-            _updateContactUseCase = updateContactUseCase;
+            _serviceProvider = serviceProvider;
         }
 
-        public async Task Consume(ConsumeContext<UpdateContactMenssage> context)
+        public async Task Consume(ConsumeContext<UpdateContactEvent> context)
         {
             var message = context.Message;
 
             try
             {
-                // Converte a mensagem em uma solicitação para o caso de uso
-                var request = new UpdateContactRequest(message.Id,message.Name, message.PhoneNumber, message.Email);
+                // Grava contato no DB
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var scopedProcessingService =
+                        scope.ServiceProvider
+                        .GetRequiredService<IContactRepository>();
 
-                System.Threading.Thread.Sleep(10000);
-                // Executa o caso de uso
-                var result = await _updateContactUseCase.Execute(request);
+                    var contact = await scopedProcessingService.GetByIdAsync(message.Id);
 
-                Console.WriteLine($"Contato atualizado com sucesso: {result.Id}");
+                    contact.Update(message.Name, new PhoneNumber(message.PhoneNumber), message.Email);
+                    scopedProcessingService.Update(contact);
+                    await scopedProcessingService.UnitOfWork.Commit();
+
+                    Console.WriteLine($"Contato atualizado com sucesso: {contact.Id}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao atualizado mensagem:email{message.Email} {ex.Message}");
+                Console.WriteLine($"Erro ao processar mensagem: Email:{message.Email} {ex.Message}");
             }
         }
     }
- }
+}
