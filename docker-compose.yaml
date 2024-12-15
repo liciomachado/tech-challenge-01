@@ -41,8 +41,9 @@ services:
       ASPNETCORE_ENVIRONMENT: Docker
     depends_on:
       - api01
+      - tokenapi
     ports:
-      - "5000:5000"
+      - "5000:8080"
     networks:
       - default
 
