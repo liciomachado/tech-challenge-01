@@ -15,21 +15,21 @@ using TechChallenge01.Domain.ValueObjects;
 
 namespace TechChallenge01.Application.Consumers
 {
-    public class UpdateContactConsumer : IConsumer<UpdateContactEvent>
+    public class DeleteContactConsumer : IConsumer<DeleteContactEvent>
     {
         private readonly IServiceProvider _serviceProvider;
-        public UpdateContactConsumer(IServiceProvider serviceProvider)
+        public DeleteContactConsumer(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public async Task Consume(ConsumeContext<UpdateContactEvent> context)
+        public async Task Consume(ConsumeContext<DeleteContactEvent> context)
         {
             var message = context.Message;
 
             try
             {
-                // Grava contato no DB
+                // Deleta contato no DB
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var scopedProcessingService =
@@ -38,19 +38,18 @@ namespace TechChallenge01.Application.Consumers
 
                     var contact = await scopedProcessingService.GetByIdAsync(message.Id);
 
-                    contact.Update(message.Name, new PhoneNumber(message.PhoneNumber), message.Email);
-                    scopedProcessingService.Update(contact);
+                    scopedProcessingService.Delete(contact);
                     await scopedProcessingService.UnitOfWork.Commit();
 
                     // TODO: Remover
                     System.Threading.Thread.Sleep(10000);
 
-                    Console.WriteLine($"Contato atualizado com sucesso: {contact.Id}");
+                    Console.WriteLine($"Contato deletado com sucesso: {contact.Id}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao processar mensagem: Email:{message.Email} {ex.Message}");
+                Console.WriteLine($"Erro ao processar mensagem: Id:{message.Id} {ex.Message}");
             }
         }
     }

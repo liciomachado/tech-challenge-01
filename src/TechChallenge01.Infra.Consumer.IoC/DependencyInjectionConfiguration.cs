@@ -17,10 +17,9 @@ public static class DependencyInjectionConfiguration
 {
     public static void AddInjections(this IServiceCollection services, IConfiguration configuration)
     {
-        // TODO: Usar em arquivo de configuração
         //Data
         services.AddDbContext<DataContext>(options => options
-            .UseNpgsql("Server=db;Port=5432;Database=tech_challenge;User Id=admin;Password=admin;Include Error Detail=True;"));
+            .UseNpgsql(configuration.GetConnectionString("postgres")));
 
         //Repo
         services.AddScoped<IContactRepository, ContactRepository>();
@@ -32,10 +31,9 @@ public static class DependencyInjectionConfiguration
             x.UsingRabbitMq((context, cfg) =>
             {
 
-                // TODO: Usar em arquivo de configuração
-                var rabbitMqHost = "rabbitmq";
-                var rabbitMqUser = "guest";
-                var rabbitMqPassword = "guest";
+                var rabbitMqHost = configuration["RabbitMQ:RABBITMQ_HOST"];
+                var rabbitMqUser = configuration["RabbitMQ:RABBITMQ_USER"];
+                var rabbitMqPassword = configuration["RabbitMQ:RABBITMQ_PASSWORD"];
 
                 cfg.Host(rabbitMqHost, h =>
                 {
@@ -55,11 +53,18 @@ public static class DependencyInjectionConfiguration
                     e.ConfigureConsumer<UpdateContactConsumer>(context);
                 });
 
+                // Configuração de fila específica para DeleteContactConsumer
+                cfg.ReceiveEndpoint("delete-contact-queue", e =>
+                {
+                    e.ConfigureConsumer<DeleteContactConsumer>(context);
+                });
+
                 cfg.ConfigureEndpoints(context);
             });
 
             x.AddConsumer<InsertContactConsumer>();
             x.AddConsumer<UpdateContactConsumer>();
+            x.AddConsumer<DeleteContactConsumer>();
         });
 
         services.AddOpenTelemetry()

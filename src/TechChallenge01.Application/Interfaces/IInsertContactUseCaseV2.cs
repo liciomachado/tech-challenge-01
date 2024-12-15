@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TechChallenge01.Application.ViewModels;
+﻿using TechChallenge01.Application.ViewModels;
 
 namespace TechChallenge01.Application.Interfaces;
 
-public interface IInsertContactUseCase
+public interface IInsertContactUseCaseV2
 {
     Task<PublishResponse> Execute(InsertContactRequest insertContactRequest);
 }

@@ -29,4 +29,9 @@ public class ContactPublisher : IContactPublisher
     {
         await _publishEndpoint.Publish(message);
     }
+
+    public async Task PublishDeleteContactAsync(DeleteContactEvent message)
+    {
+        await _publishEndpoint.Publish(message);
+    }
 }

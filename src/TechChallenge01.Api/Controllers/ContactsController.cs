@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TechChallenge01.Application.Events;
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
 
@@ -26,12 +25,14 @@ namespace TechChallenge01.Api.Controllers
             try
             {
                 return Ok(await insertContactUseCase.Execute(insertContactRequest));
+
             }
             catch (Exception e) when (e is ApplicationException || e is ArgumentException)
             {
                 return BadRequest(new ErrorMessageResponse(e.Message));
             }
         }
+
         /// <summary>
         /// Alteração de um Contato
         /// </summary>

@@ -29,15 +29,17 @@ public static class DependencyInjectionConfiguration
         services.AddDbContext<DataContext>(options => options
             .UseNpgsql(configuration.GetConnectionString("postgres")));
 
-        // TODO: Remover
         //Repo
         services.AddScoped<IContactRepository, ContactRepository>();
 
         //Services
-        services.AddScoped<IInsertContactUseCase, InsertContactUseCaseV2>();
-        services.AddScoped<IGetContactsUseCase, GetContactsUseCase>();
-        services.AddScoped<IUpdateContactUseCase, UpdateContactUseCaseV2>();
+        services.AddScoped<IInsertContactUseCase, InsertContactUseCase>();
         services.AddScoped<IDeleteContactsUseCase, DeleteContactUseCase>();
+        services.AddScoped<IUpdateContactUseCase, UpdateContactUseCase>();
+        services.AddScoped<IInsertContactUseCaseV2, InsertContactUseCaseV2>();
+        services.AddScoped<IDeleteContactsUseCaseV2, DeleteContactUseCaseV2>();
+        services.AddScoped<IUpdateContactUseCaseV2, UpdateContactUseCaseV2>();
+        services.AddScoped<IGetContactsUseCase, GetContactsUseCase>();
         services.AddScoped<IContactPublisher, ContactPublisher>();
         const string serviceName = "MyService";
 

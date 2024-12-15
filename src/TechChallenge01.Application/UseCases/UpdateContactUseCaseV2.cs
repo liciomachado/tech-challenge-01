@@ -9,9 +9,9 @@ using TechChallenge01.Domain.ValueObjects;
 namespace TechChallenge01.Application.UseCases
 {
     public class UpdateContactUseCaseV2([FromServices] IContactPublisher contactPublisher /* Serviço dedicado para publicar */,
-        IContactRepository contactRepository) : IUpdateContactUseCase
+        IContactRepository contactRepository) : IUpdateContactUseCaseV2
     {
-        public async Task<ContactResponse> Execute(UpdateContactRequest updateContactRequest)
+        public async Task<PublishResponse> Execute(UpdateContactRequest updateContactRequest)
         {
             var contact = await contactRepository.GetByIdAsync(updateContactRequest.Id);
             if (contact == null) throw new ApplicationException("Não foi possível localizar o cadastro do contato informado.");
@@ -22,6 +22,7 @@ namespace TechChallenge01.Application.UseCases
             if (!ContactValidator.IsValidEmail(updateContactRequest.Email))
                 throw new ArgumentException("Formato de e-mail inválido.");
 
+            // Criado para validar as regras antes da publicação na fila
             var phoneNumber = new PhoneNumber(updateContactRequest.PhoneNumber);
 
             await contactPublisher.PublishUpdateContacttAsync(new UpdateContactEvent
@@ -32,7 +33,16 @@ namespace TechChallenge01.Application.UseCases
                 PhoneNumber = updateContactRequest.PhoneNumber
             });
 
-            return new ContactResponse(contact.Id, contact.Name, contact.PhoneNumber.Value, contact.Email, contact.PhoneNumber.DDD);
+            return new PublishResponse
+            {
+                Message = "Atualização em processamento.",
+                Data = new
+                {
+                    updateContactRequest.Name,
+                    updateContactRequest.Email,
+                    updateContactRequest.PhoneNumber
+                }
+            };
         }
     }
 }

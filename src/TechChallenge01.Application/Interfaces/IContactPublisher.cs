@@ -11,5 +11,6 @@ namespace TechChallenge01.Application.Interfaces
     {
         Task PublishInsertContacttAsync(InsertContactEvent message);
         Task PublishUpdateContacttAsync(UpdateContactEvent message);
+        Task PublishDeleteContactAsync(DeleteContactEvent message);
     }
 }

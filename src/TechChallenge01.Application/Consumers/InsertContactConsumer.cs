@@ -40,7 +40,8 @@ public class InsertContactConsumer : IConsumer<InsertContactEvent>
                 await scopedProcessingService.UnitOfWork.Commit();
             }
 
-            System.Threading.Thread.Sleep(5000);
+            // TODO: Remover
+            System.Threading.Thread.Sleep(10000);
 
             Console.WriteLine($"Contato inserido com sucesso: {contact.Id}");
         }

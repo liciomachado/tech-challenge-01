@@ -8,9 +8,9 @@ using TechChallenge01.Domain.ValueObjects;
 
 namespace TechChallenge01.Application.UseCases;
 
-public class InsertContactUseCaseV2([FromServices] IContactPublisher contactPublisher /* Serviço dedicado para publicar */) : IInsertContactUseCase
+public class InsertContactUseCaseV2([FromServices] IContactPublisher contactPublisher /* Serviço dedicado para publicar */) : IInsertContactUseCaseV2
 {
-    public async Task<ContactResponse> Execute(InsertContactRequest insertContactRequest)
+    public async Task<PublishResponse> Execute(InsertContactRequest insertContactRequest)
     {
         if (!ContactValidator.IsValidName(insertContactRequest.Name))
             throw new ArgumentException("O nome é obrigatório.");
@@ -30,8 +30,16 @@ public class InsertContactUseCaseV2([FromServices] IContactPublisher contactPubl
             PhoneNumber = insertContactRequest.PhoneNumber
         });
 
-        // TODO: Verificar mensagem de retorno para api
-        return new ContactResponse(contact.Id, contact.Name, contact.PhoneNumber.Value, contact.Email, contact.PhoneNumber.DDD);
+        return new PublishResponse
+        {
+            Message = "Cadastro em processamento.",
+            Data = new
+            {
+                insertContactRequest.Name,
+                insertContactRequest.Email,
+                insertContactRequest.PhoneNumber
+            }
+        };
     }
 }
 
