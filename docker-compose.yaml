@@ -30,6 +30,22 @@ services:
      - db
     ports:
      - "8081:8080"
+     
+  webstatus:
+    build:
+      context: .
+      dockerfile: ./src/TechChallenge01.WebStatus/Dockerfile
+    container_name: webstatus
+    hostname: webstatus
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+    depends_on:
+      - api01
+      - tokenapi
+    ports:
+      - "8083:8080"
+    networks:
+      - default
 
   apigateway:
     build:
@@ -86,9 +102,15 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+      - "15692:15692" 
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    command: >
+      sh -c "
+      rabbitmq-plugins enable --offline rabbitmq_prometheus &&
+      rabbitmq-server
+      "
 
   prometheus:
     image: prom/prometheus

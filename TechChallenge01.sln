@@ -39,6 +39,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge01.Infra.Consu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge01.Infra.Consumer", "src\TechChallenge01.Infra.Consumer\TechChallenge01.Infra.Consumer.csproj", "{BEB69742-2590-43BC-95F1-718236D2167E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApps", "WebApps", "{EF6A91FE-C5FF-4994-88B1-AEEE75F835DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge01.WebStatus", "src\TechChallenge01.WebStatus\TechChallenge01.WebStatus.csproj", "{670FE470-6E54-476B-9D74-4EE734939C4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +101,10 @@ Global
 		{BEB69742-2590-43BC-95F1-718236D2167E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEB69742-2590-43BC-95F1-718236D2167E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEB69742-2590-43BC-95F1-718236D2167E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{670FE470-6E54-476B-9D74-4EE734939C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{670FE470-6E54-476B-9D74-4EE734939C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{670FE470-6E54-476B-9D74-4EE734939C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{670FE470-6E54-476B-9D74-4EE734939C4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +123,7 @@ Global
 		{0C89C643-F32F-4951-9A7A-D658720B5484} = {59E8E717-19F7-449E-8725-94B1781B18A0}
 		{891B2F7E-AB9D-4D6B-A888-67E11F3B6958} = {6B8205F3-5039-43A6-B8D0-ECDAB6AC710D}
 		{BEB69742-2590-43BC-95F1-718236D2167E} = {6B8205F3-5039-43A6-B8D0-ECDAB6AC710D}
+		{670FE470-6E54-476B-9D74-4EE734939C4A} = {EF6A91FE-C5FF-4994-88B1-AEEE75F835DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1E37D7A-DF15-4AB4-A5C9-84E731609481}
