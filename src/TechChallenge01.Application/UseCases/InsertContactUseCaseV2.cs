@@ -16,14 +16,14 @@ public class InsertContactUseCaseV2([FromServices] IContactPublisher contactPubl
             throw new ArgumentException("O nome é obrigatório.");
 
         if (!ContactValidator.IsValidEmail(insertContactRequest.Email))
-            throw new ArgumentException($"Formato de e-mail inválido.{insertContactRequest.Email}");
+            throw new ArgumentException($"Formato de e-mail inválido.");
 
         var phoneNumber = new PhoneNumber(insertContactRequest.PhoneNumber);
 
         var contact = new Contact(insertContactRequest.Name, phoneNumber, insertContactRequest.Email);
 
         // Cria a mensagem e publica na fila
-        await contactPublisher.PublishInsertContacttAsync(new InsertContactEvent
+        await contactPublisher.PublishInsertContactAsync(new InsertContactEvent
         {
             Name = insertContactRequest.Name,
             Email = insertContactRequest.Email,

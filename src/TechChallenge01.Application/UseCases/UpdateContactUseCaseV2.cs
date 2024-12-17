@@ -25,7 +25,7 @@ namespace TechChallenge01.Application.UseCases
             // Criado para validar as regras antes da publicação na fila
             var phoneNumber = new PhoneNumber(updateContactRequest.PhoneNumber);
 
-            await contactPublisher.PublishUpdateContacttAsync(new UpdateContactEvent
+            await contactPublisher.PublishUpdateContactAsync(new UpdateContactEvent
             {
                 Id = updateContactRequest.Id,
                 Name = updateContactRequest.Name,

@@ -26,9 +26,9 @@ namespace TechChallenge01.Api.Controllers
             {
                 return Ok(await insertContactUseCase.Execute(insertContactRequest));
             }
-            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+            catch (Exception ex) when (ex is ApplicationException || ex is ArgumentException)
             {
-                return BadRequest(new ErrorMessageResponse(e.Message));
+                return BadRequest(new ErrorMessageResponse(ex.Message));
             }
         }
         /// <summary>
@@ -49,9 +49,9 @@ namespace TechChallenge01.Api.Controllers
                 return Ok(await updateContactUseCase.Execute(updateContactRequest));
 
             }
-            catch (Exception e) when (e is ApplicationException || e is ArgumentException)
+            catch (Exception ex) when (ex is ApplicationException || ex is ArgumentException)
             {
-                return BadRequest(new ErrorMessageResponse(e.Message));
+                return BadRequest(new ErrorMessageResponse(ex.Message));
             }
         }
 
@@ -73,9 +73,9 @@ namespace TechChallenge01.Api.Controllers
             {
                 return Ok(await deleteContactsUseCase.Delete(Id));
             }
-            catch (ApplicationException e)
+            catch (ApplicationException ex)
             {
-                return BadRequest(new ErrorMessageResponse(e.Message));
+                return BadRequest(new ErrorMessageResponse(ex.Message));
             }
         }
     }
