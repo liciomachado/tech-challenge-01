@@ -18,7 +18,23 @@ services:
       - rabbitmq
     ports:
       - "8080:8080"
-
+  apiqueue:  
+    hostname: apiqueue
+    build:
+      context: .
+      dockerfile: ./src/TechChallenge01.ApiMessaging/Dockerfile        
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      - db
+      - rabbitmq
+    ports:
+      - "8084:8080"
   tokenapi:
     container_name: tokenapi
     hostname: tokenapi

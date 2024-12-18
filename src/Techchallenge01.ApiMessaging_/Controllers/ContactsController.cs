@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using TechChallenge01.Application.Interfaces;
 using TechChallenge01.Application.ViewModels;
 
-namespace TechChallenge01.Api.Controllers
+namespace TechChallenge01.ApiMessaging.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContactsV2Controller : ControllerBase
+    public class ContactsController :   ControllerBase
     {
         /// <summary>
         /// Inclusão de um Contato

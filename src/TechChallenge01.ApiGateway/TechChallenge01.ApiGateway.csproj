@@ -8,7 +8,10 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
-
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
   <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="8.0.1" />
         <PackageReference Include="Ocelot" Version="23.4.2" />

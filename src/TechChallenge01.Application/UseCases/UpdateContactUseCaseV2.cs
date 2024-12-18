@@ -38,6 +38,7 @@ namespace TechChallenge01.Application.UseCases
                 Message = "Atualização em processamento.",
                 Data = new
                 {
+                    updateContactRequest.Id,
                     updateContactRequest.Name,
                     updateContactRequest.Email,
                     updateContactRequest.PhoneNumber
