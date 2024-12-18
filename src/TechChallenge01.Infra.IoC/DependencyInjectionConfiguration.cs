@@ -15,7 +15,8 @@ using TechChallenge01.Infra.Data.Context;
 using TechChallenge01.Infra.Data.Repositories;
 using MassTransit;
 using TechChallenge01.Application.Consumers;
-
+using Microsoft.Extensions.Logging;
+ 
 
 
 
@@ -29,6 +30,7 @@ public static class DependencyInjectionConfiguration
         services.AddDbContext<DataContext>(options => options
             .UseNpgsql(configuration.GetConnectionString("postgres")));
 
+      
         //Repo
         services.AddScoped<IContactRepository, ContactRepository>();
 
@@ -36,6 +38,8 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IInsertContactUseCase, InsertContactUseCase>();
         services.AddScoped<IDeleteContactsUseCase, DeleteContactUseCase>();
         services.AddScoped<IUpdateContactUseCase, UpdateContactUseCase>();
+        services.AddScoped<IAuthenticationUseCase, AuthenticationUseCase>();
+
         services.AddScoped<IInsertContactUseCaseV2, InsertContactUseCaseV2>();
         services.AddScoped<IDeleteContactsUseCaseV2, DeleteContactUseCaseV2>();
         services.AddScoped<IUpdateContactUseCaseV2, UpdateContactUseCaseV2>();
@@ -57,15 +61,41 @@ public static class DependencyInjectionConfiguration
                     h.Password(rabbitMqPassword);
                 });
 
+                // Configuração de Retry
+                cfg.UseMessageRetry(retryConfig =>
+                {
+                    retryConfig.Interval(3, TimeSpan.FromSeconds(5)); // Tentar 3 vezes com intervalos de 5 segundos
+                });
+                
+                // Configuração do Circuit Breaker
+                cfg.UseCircuitBreaker(cb =>
+                {
+                    cb.TrackingPeriod = TimeSpan.FromMinutes(1);  // Período para acompanhar falhas
+                    cb.TripThreshold = 15;  // Número máximo de falhas para abrir o circuito
+                    cb.ActiveThreshold = 10; // Número máximo de falhas ativas antes de abrir o circuito
+                    cb.ResetInterval = TimeSpan.FromMinutes(2);  // Intervalo para resetar o circuito
+
+                    
+                });
+
+ 
+
                 cfg.ConfigureEndpoints(context);
             });
         });
+
+        // Adicionar Health Checks
+        services.AddHealthChecks()
+            .AddCheck("API Health", () =>
+                Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy("API está saudável"));
+
 
         services.AddOpenTelemetry()
         .ConfigureResource(resource => resource.AddService(serviceName))
         .WithTracing(tracing => tracing
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
+          
         )
         .WithMetrics(metrics => 
         {

@@ -6,7 +6,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "api01",
+          "Host": "apiqueue",
           "Port": 8080
         }
       ],
@@ -25,7 +25,21 @@
       ],
       "UpstreamPathTemplate": "/api/Token/{everything}",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      // Configuração do terceiro serviço
+      "DownstreamPathTemplate": "/api/Contacts/GetAll",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "api01",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Contacts/GetAll",
+      "UpstreamHttpMethod": [ "GET" ]
     }
+
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5000"

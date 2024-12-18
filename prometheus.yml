@@ -4,6 +4,9 @@ scrape_configs:
   - job_name: 'api01-read-prometheus'
     static_configs:
     - targets: ['api01:8080']
+  - job_name: 'rabbitmq'
+    static_configs:
+    - targets: ['rabbitmq:15692']
   
   - job_name: 'tokenapi-read-prometheus'
     static_configs:

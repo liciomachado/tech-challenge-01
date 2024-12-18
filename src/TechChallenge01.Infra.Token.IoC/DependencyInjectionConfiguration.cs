@@ -20,6 +20,10 @@ public static class DependencyInjectionConfiguration
 
         //Services
         services.AddSingleton<IAuthenticationUseCase, AuthenticationUseCase>();
+        // Adicionar Health Checks
+       services.AddHealthChecks()           
+            .AddCheck("API Health", () =>
+                Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy("API está saudável"));
 
         const string serviceName = "TokenService";
 

@@ -10,6 +10,11 @@ using MassTransit;
 using TechChallenge01.Infra.Data.Context;
 using TechChallenge01.Infra.Data.Repositories;
 using TechChallenge01.Application.Consumers;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Polly.CircuitBreaker;
+using Polly;
+using Polly.Extensions.Http;
+
 
 namespace TechChallenge01.Infra.Consumer.IoC;
 
@@ -66,6 +71,35 @@ public static class DependencyInjectionConfiguration
             x.AddConsumer<UpdateContactConsumer>();
             x.AddConsumer<DeleteContactConsumer>();
         });
+       
+               
+        
+        // Configuração do OpenTelemetry
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService(serviceName))
+            .WithTracing(tracing => tracing
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+            )
+            .WithMetrics(metrics =>
+            {
+                metrics
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddAspNetCoreInstrumentation()
+                    .AddPrometheusExporter();  // Exposição para Prometheus
+            });
+
+       
+        // Configuração de Polly para RabbitMQ com retries
+        services.AddSingleton<IAsyncPolicy>(policy =>
+        {
+            return Policy.Handle<Exception>()
+                         .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        });
+
+
+
 
         services.AddOpenTelemetry()
         .ConfigureResource(resource => resource.AddService(serviceName))
