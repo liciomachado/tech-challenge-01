@@ -1,4 +1,7 @@
+using HealthChecks.UI.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -16,7 +19,7 @@ builder.Services.AddSwaggerGen(c =>
         Description =
         "JWT Authorization Header - utilizado com Bearer Authentication.\r\n\r\n" +
         "Digite 'Bearer' [espaço] e então seu token no campo abaixo.\r\n\r\n" +
-        "Exemplo (infomrar sem as aspas): 'Bearer 12345abcdef'",
+        "Exemplo (informar sem as aspas): 'Bearer 12345abcdef'",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -56,18 +59,18 @@ builder.Services.AddAuthentication(x =>
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(j =>
+.AddJwtBearer(j =>
+{
+    j.RequireHttpsMetadata = false;
+    j.SaveToken = true;
+    j.TokenValidationParameters = new TokenValidationParameters()
     {
-        j.RequireHttpsMetadata = false;
-        j.SaveToken = true;
-        j.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 var app = builder.Build();
 app.MapPrometheusScrapingEndpoint();
@@ -79,6 +82,21 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// Mapear os Endpoints de Health Checks
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var result = System.Text.Json.JsonSerializer.Serialize(new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(e => new { e.Key, Status = e.Value.Status.ToString() })
+        });
+        await context.Response.WriteAsync(result);
+    }
+});
 app.Run();
 
 public partial class Program;

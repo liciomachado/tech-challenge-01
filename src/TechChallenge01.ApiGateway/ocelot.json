@@ -1,0 +1,47 @@
+{
+  "Routes": [
+    {
+      // Configuração do primeiro serviço
+      "DownstreamPathTemplate": "/api/Contacts/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apiqueue",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Contacts/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      // Configuração do segundo serviço
+      "DownstreamPathTemplate": "/api/token",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tokenapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Token/{everything}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      // Configuração do terceiro serviço
+      "DownstreamPathTemplate": "/api/Contacts/GetAll",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "api01",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Contacts/GetAll",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5000"
+  }
+}

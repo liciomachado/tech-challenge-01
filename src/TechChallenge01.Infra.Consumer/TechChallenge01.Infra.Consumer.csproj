@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-TechChallenge01.Infra.Consumer-1a8511fa-fae6-4cf5-a1f0-0dabc6820c87</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
+    <PackageReference Include="MassTransit" Version="8.3.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TechChallenge01.Domain\TechChallenge01.Domain.csproj" />
+    <ProjectReference Include="..\TechChallenge01.Infra.Consumer.IoC\TechChallenge01.Infra.Consumer.IoC.csproj" />
+  </ItemGroup>
+
+</Project>
