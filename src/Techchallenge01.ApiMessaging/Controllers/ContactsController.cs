@@ -18,7 +18,8 @@ namespace TechChallenge01.ApiMessaging.Controllers
         /// <response code="200">Sucesso na inclusão do Contato</response>
         /// <response code="400">Não foi possível incluir o Contato</response>
         /// <response code="401">Não autorizado</response>
-        [HttpPost]  
+        [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add([FromServices] IInsertContactUseCaseV2 insertContactUseCase, InsertContactRequest insertContactRequest)
         {
             try
@@ -39,7 +40,8 @@ namespace TechChallenge01.ApiMessaging.Controllers
         /// <response code="200">Sucesso na alteração do Contato</response>
         /// <response code="400">Não foi possível alterar o Contato</response>
         /// <response code="401">Não autorizado</response>
-        [HttpPut]  
+        [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Update([FromServices] IUpdateContactUseCaseV2 updateContactUseCase, UpdateContactRequest updateContactRequest)
         {
             try
@@ -64,6 +66,7 @@ namespace TechChallenge01.ApiMessaging.Controllers
         /// <response code="401">Não autorizado</response>
         [HttpDelete]     
         [Route("delete")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromServices] IDeleteContactsUseCaseV2 deleteContactsUseCase, [FromQuery] long Id)
         {
             try

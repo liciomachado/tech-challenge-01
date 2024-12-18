@@ -45,8 +45,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge01.WebStatus",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Techchallenge01.ApiMessaging", "src\Techchallenge01.ApiMessaging\Techchallenge01.ApiMessaging.csproj", "{9C42811E-3BED-4596-A5A0-39F1824065D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge01.ApiQueue.Tests", "test\TechChallenge01.ApiQueue.Tests\TechChallenge01.ApiQueue.Tests.csproj", "{E78FE0F7-D584-446B-9440-FA6B9CCC5B66}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,10 +111,6 @@ Global
 		{9C42811E-3BED-4596-A5A0-39F1824065D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C42811E-3BED-4596-A5A0-39F1824065D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C42811E-3BED-4596-A5A0-39F1824065D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E78FE0F7-D584-446B-9440-FA6B9CCC5B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E78FE0F7-D584-446B-9440-FA6B9CCC5B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E78FE0F7-D584-446B-9440-FA6B9CCC5B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E78FE0F7-D584-446B-9440-FA6B9CCC5B66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,7 +131,6 @@ Global
 		{BEB69742-2590-43BC-95F1-718236D2167E} = {6B8205F3-5039-43A6-B8D0-ECDAB6AC710D}
 		{670FE470-6E54-476B-9D74-4EE734939C4A} = {EF6A91FE-C5FF-4994-88B1-AEEE75F835DE}
 		{9C42811E-3BED-4596-A5A0-39F1824065D1} = {E6D216BC-5967-4308-A920-B9F9DE2A5E7B}
-		{E78FE0F7-D584-446B-9440-FA6B9CCC5B66} = {741C4D7E-534F-45B5-B9AB-247BE7548D12}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1E37D7A-DF15-4AB4-A5C9-84E731609481}
