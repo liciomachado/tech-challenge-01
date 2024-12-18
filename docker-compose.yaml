@@ -1,5 +1,3 @@
-version: '3.5'
-
 services: 
   api01: &api
     hostname: api01

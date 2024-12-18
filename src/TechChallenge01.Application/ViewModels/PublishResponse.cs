@@ -2,7 +2,7 @@
 {
     public class PublishResponse
     {
-        public dynamic Data { get; set; }
+        public object Data { get; set; }
         public string Message { get; set; }
     }
 }
