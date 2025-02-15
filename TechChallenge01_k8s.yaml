@@ -1,0 +1,194 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tech-challenge
+
+---
+
+# Pod e Deployment para o DB (Postgres)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-db
+  namespace: tech-challenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: c-postgres
+        image: postgres
+        env:
+        - name: POSTGRES_DB
+          value: tech_challenge
+        - name: POSTGRES_USER
+          value: admin
+        - name: POSTGRES_PASSWORD
+          value: admin
+        ports:
+        - containerPort: 5432
+
+---
+
+# Pod e Deployment para RabbitMQ
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-rabbitmq
+  namespace: tech-challenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: c-rabbitmq
+        image: rabbitmq:management
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        - containerPort: 15692
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: guest
+        - name: RABBITMQ_DEFAULT_PASS
+          value: guest
+        command:
+        - sh
+        - -c
+        - |
+          rabbitmq-plugins enable --offline rabbitmq_prometheus &&
+          rabbitmq-server
+
+---
+
+# Service para DB
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-db
+  namespace: tech-challenge
+spec:
+  selector:
+    app: db
+  type: NodePort
+  ports:
+    - port: 5432
+      targetPort: 30432
+
+---
+
+# Service para RabbitMQ
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-rabbitmq
+  namespace: tech-challenge
+spec:
+  selector:
+    app: rabbitmq
+  type: NodePort
+  ports:
+    - port: 5672
+      nodePort: 30672
+      name: porta-rmq1
+    - port: 15672
+      nodePort: 31672
+      name: porta-rmq2
+    - port: 15692
+      nodePort: 31692
+      name: porta-rmq3
+
+---
+
+# Pod e Deployment para Prometheus
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-prometheus
+  namespace: tech-challenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: c-prometheus
+        image: prom/prometheus
+        ports:
+        - containerPort: 9090
+
+---
+
+# Service para Prometheus
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-prometheus
+  namespace: tech-challenge
+spec:
+  selector:
+    app: prometheus
+  type: NodePort
+  ports:
+    - port: 9090
+      nodePort: 30090
+
+---
+
+# Pod e Deployment para Grafana
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-grafana
+  namespace: tech-challenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: c-grafana
+        image: grafana/grafana
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin@123
+
+---
+
+# Service para Grafana
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-grafana
+  namespace: tech-challenge
+spec:
+  selector:
+    app: grafana
+  type: NodePort
+  ports:
+    - port: 3000
+      nodePort: 30000
